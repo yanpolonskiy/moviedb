@@ -16,7 +16,7 @@ export class FavoriteItem extends Component {
     render() {
     const { movie } = this.props;
     return (
-        <li className="movie-item" onClick={this.openInfo.bind(this)}>
+        <li className="favorite-item" onClick={this.openInfo.bind(this)}>
             <img src={`https://image.tmdb.org/t/p/w200/${movie.poster_path}`} />            
             <div className="background" />
             <a className="delete-button" onClick={this.deleteFavoriteMovie.bind(this)}></a>

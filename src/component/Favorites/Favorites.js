@@ -11,7 +11,6 @@ export class Favorites extends Component {
         super(props);
         this.state = {
             favoriteMovies: [],
-            isLoading: true
         };
     }
 
@@ -27,16 +26,10 @@ export class Favorites extends Component {
 
     
     componentWillReceiveProps(nextProps) {
+        const { favorites } = nextProps;
         this.setState({
-            isLoading: true,
             favoriteMovies: []
         })
-        const { favorites } = nextProps;
-        if(favorites.length === 0) {
-            this.setState({
-                isLoading: false
-            })
-        }
         for (let i = 0; i < favorites.length; i++) {
             getDetails(favorites[i]).then(data => {
                 this.addFavorite(data, i);
@@ -46,15 +39,9 @@ export class Favorites extends Component {
 
 
     addFavorite(data, index) {
-        let updatedFavorites = [].concat(this.state.favoriteMovies, data);
         this.setState({
-            favoriteMovies: updatedFavorites
+            favoriteMovies: [].concat(this.state.favoriteMovies, data)
         });
-        if (index === this.props.favorites.length - 1) {
-            this.setState({
-                isLoading: false
-            });
-        }
     }
 
     stopPropagation(event) {
@@ -63,10 +50,7 @@ export class Favorites extends Component {
 
     render() {
         return (
-            <div className="favorites-container" onClick={this.stopPropagation}>
-                <LoadAnimator isLoading={this.state.isLoading}                
-                    height='100%'
-             />
+            <div className="favorites-container" onClick={this.stopPropagation}>               
                 <h2>Избранное</h2>
                 <ul className="favorite-list">
                     {this.state.favoriteMovies.map(movie => (

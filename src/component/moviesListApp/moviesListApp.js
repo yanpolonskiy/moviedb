@@ -103,6 +103,7 @@ class MoviesListApp extends Component {
                     favorites={this.props.favorites}
                     popularMovies={this.props.popularMovies}
                     addFavoriteMovie={this.props.addFavoriteMovie}
+                    deleteFavoriteMovie={this.props.deleteFavoriteMovie}
                     openDetail={this.openDetail.bind(this)}
                     changeDetailedMovieId={this.changeDetailedMovieId.bind(this)}
                 />

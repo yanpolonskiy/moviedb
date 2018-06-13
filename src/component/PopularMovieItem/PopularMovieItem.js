@@ -49,6 +49,11 @@ export class PopularMovieItem extends Component {
         this.props.addFavoriteMovie(this.props.movie.id);
     }
 
+    deleteFavoriteMovie(event) {        
+        event.stopPropagation();
+        this.props.deleteFavoriteMovie(this.props.movie.id);
+    }
+
     render() {
         const { movie } = this.props;
         const release_date = new Date(movie.release_date).getFullYear();
@@ -78,7 +83,7 @@ export class PopularMovieItem extends Component {
                         Бюджет: {this.state.budget}
                     </span>
                     <button
-                        onClick={this.addFavoriteMovie.bind(this)}
+                        onClick={this.props.isInFavorite ? this.deleteFavoriteMovie.bind(this) : this.addFavoriteMovie.bind(this)}
                         className={this.props.isInFavorite ? "in-favorite" : ""}
                     >
                     {this.props.isInFavorite ? "В избранном" : "В избранное"}                        

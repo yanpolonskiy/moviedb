@@ -1,7 +1,7 @@
 import * as constants from '../constants/storeConstans';
 export const initialState = {
     popularMovies: [],
-    favorites: [383498, 284054, 482560]
+    favorites: [383498]
 }
 
 export const rootReducer = (state = initialState, action) => {
@@ -20,7 +20,6 @@ export const rootReducer = (state = initialState, action) => {
         };
 
         case constants.DELETE_FAVORITE_MOVIE:
-        console.log(state.favorites.filter( id => id !== action.payload));
         return {
             ...state,
             favorites: state.favorites.filter( id => id !== action.payload)
