@@ -1,0 +1,45 @@
+.detailed-movie {
+    display: flex;
+    align-items: center;
+    align-items: top;
+    justify-content: space-between;
+    flex: 1 0 50%;
+    position: relative;
+    img {
+        margin-left: 2em;
+        border: 10px solid rgba(102, 102, 102, 0.76);
+    }
+    .detailed-info {
+        display: flex;
+        flex-direction: column;
+        margin-left: 2em;
+        height: 300px;
+        justify-content: space-around;
+        font-family: "Awesome";
+        span {
+            display: block;
+        }
+
+        .movie-title {
+            font-size: 36px;
+            display: block;
+            height: 30%;
+        }
+        .description {
+            font-size: 20px;
+            height: 50%;
+        }
+        .genres {
+            font-size: 16px;
+            height: 20%;
+        }
+    }
+}
+
+@font-face {
+    font-family: "Awesome";
+    src: url("../../fonts/fontawesome-webfont.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+

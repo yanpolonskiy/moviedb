@@ -1,0 +1,53 @@
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    width: 100%;
+    height: 90px;
+}
+
+body::after {
+    content: "";
+    opacity: 0.9;
+    background-image: url('../src/images/background7.jpg');
+    background-size: cover;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: fixed;
+    z-index: -1;  
+}
+
+
+
+::-webkit-scrollbar {
+    width: 1em;    
+    background-color: white;
+    -webkit-border-radius: 0 0 20px 20px;
+}
+
+
+::-webkit-scrollbar-track {  
+    background-color: white;
+    -webkit-border-radius: 0 0 40px 40px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb {  
+    height: 30px;  
+    -webkit-border-radius: 5px 5px 5px 5px;
+    background-color: darkgrey;
+    outline: 1px solid slategrey;
+}
+
+#app-container {
+    width: 1000px;
+    margin: 0 auto;
+}

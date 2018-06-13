@@ -1,0 +1,74 @@
+.movie-item {
+    display: block;
+    color: black;
+    flex: 1 0 25%;
+    max-width: 25%;
+    border: 1px solid rgba(100, 100, 100, 0.7);
+    transform: scale(0.95, 0.95);
+    position: relative;
+    padding: 0.2em;
+    z-index: 5;
+    min-height: 230px;
+
+    .delete-button {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        width: 32px;
+        height: 32px;
+        opacity: 1;
+        z-index: 100;
+        &:hover {
+            opacity: 1;
+            &:before,
+            &:after {
+                background-color: yellow;
+            }
+        }
+        &:before,
+        &:after {
+            position: absolute;
+            left: 15px;
+            content: " ";
+            height: 33px;
+            width: 2px;
+            background-color: black;
+        }
+        &:before {
+            transform: rotate(45deg);
+        }
+        &:after {
+            transform: rotate(-45deg);
+        }
+    }
+
+    img {
+        display: block;
+        width: 100%;
+        border: 2px solid black;
+        position: relative;
+        z-index: 20;
+    }
+    .background {
+        content: "";
+        opacity: 0.7;
+        width: 100%;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: -250px;
+        background-size: cover;
+        position: absolute;
+        z-index: -1;
+        background: lightcyan;
+        background-image: url("../../images/moviesBackground.jpg");
+    }
+}
+
+.movie-item:hover {
+    cursor: pointer;
+    transform: scale(0.98, 0.98);
+    border: 1px solid rgb(242, 255, 54);
+    box-shadow: 1px 1px 10px -2px rgba(242, 255, 54, 1);
+    z-index: 40;
+}

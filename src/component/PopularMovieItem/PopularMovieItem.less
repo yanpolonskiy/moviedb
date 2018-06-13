@@ -1,0 +1,107 @@
+.movie-item {
+    display: block;
+    color: black;
+    flex: 1 0 25%;
+    max-width: 25%;
+    border: 1px solid rgba(100, 100, 100, 0.7);
+    transform: scale(0.95, 0.95);
+    position: relative;
+    padding: 0.2em;
+    z-index: 5;
+    min-height: 230px;
+
+    img {
+        display: block;
+        width: 100%;
+        border: 2px solid black;
+        position: relative;
+        z-index: 20;
+    }
+
+    .info {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        position: absolute;
+        right: -85%;
+        top: 0;
+        width: 200px;
+        background-color: rgba(240, 217, 15, 0.9);
+        font-size: 12px;
+        z-index: 200;
+        height: 175px;
+        visibility: hidden;
+        &::after {
+            content: " ";
+            position: absolute;
+            top: 10%;
+            right: 100%; /* To the left of the tooltip */
+            margin-top: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: transparent rgba(240, 217, 15, 0.9) transparent
+                transparent;
+        }
+        .movie-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            word-wrap: normal;
+            font-size: 14px;
+            width: 100%;       
+            padding: 0.1%;
+            min-height: 30%;
+            background: rgba(152, 123, 60, 0.3);            
+            cursor: default;
+        }
+        span {
+            display: block;
+            width: 100%;
+            margin-left: 25px;
+            cursor: default;
+        }
+        button {
+            text-decoration: none;
+            text-align: center;
+            padding: 7px 25px;
+            border: solid 3px #948806;
+            -webkit-border-radius: 7px;
+            -moz-border-radius: 7px;
+            border-radius: 7px;
+            font: 12px Arial, Helvetica, sans-serif;
+            font-weight: bold;
+            color: #780707;
+            background: #e8a617;
+            outline: none;
+            cursor: pointer;
+            box-shadow: 0px 0px 2px #fc0000, inset -20px 0px 0px #701c1c;
+            &.active {
+                box-shadow: 0px 0px 2px #fc0000, inset -20px 0px 0px #701c1c;
+            }
+        }
+    }
+
+    .background {
+        content: "";
+        opacity: 0.7;
+        width: 100%;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: -250px;
+        background-size: cover;
+        position: absolute;
+        z-index: -1;
+        background: lightcyan;
+        background-image: url("../../images/moviesBackground.jpg");
+    }
+}
+
+.movie-item:hover {
+    cursor: pointer;
+    transform: scale(0.98, 0.98);
+    border: 1px solid rgb(242, 255, 54);
+    box-shadow: 1px 1px 10px -2px rgba(242, 255, 54, 1);
+    z-index: 40;
+}
