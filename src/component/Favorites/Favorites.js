@@ -69,10 +69,10 @@ export class Favorites extends Component {
              />
                 <h2>Избранное</h2>
                 <ul className="favorite-list">
-                    {this.state.favoriteMovies.map(item => (
+                    {this.state.favoriteMovies.map(movie => (
                         <FavoriteItem
-                            key={guid()}
-                            movie={item}
+                            key={movie.id}
+                            movie={movie}
                             openDetail={this.props.openDetail}
                             deleteFavoriteMovie={this.props.deleteFavoriteMovie}
                             changeDetailedMovieId={

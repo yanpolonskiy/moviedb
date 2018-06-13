@@ -13,7 +13,7 @@ export const SimilarMovies = props => {
             <ul className="similar-movies-list">
                 {props.movies.map((movie, i) => (
                     <SimilarMovieItem
-                        key={guid()}
+                        key={movie.id}
                         movie={movie}
                         openDetail={props.openDetail}
                         changeDetailedMovieId={props.changeDetailedMovieId}

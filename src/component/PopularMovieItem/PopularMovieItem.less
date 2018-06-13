@@ -24,25 +24,15 @@
         justify-content: space-around;
         align-items: center;
         position: absolute;
-        right: -85%;
-        top: 0;
-        width: 200px;
+        bottom: 0;
+        left: 0;
+        width: 100%;
         background-color: rgba(240, 217, 15, 0.9);
         font-size: 12px;
         z-index: 200;
         height: 175px;
         visibility: hidden;
-        &::after {
-            content: " ";
-            position: absolute;
-            top: 10%;
-            right: 100%; /* To the left of the tooltip */
-            margin-top: -5px;
-            border-width: 5px;
-            border-style: solid;
-            border-color: transparent rgba(240, 217, 15, 0.9) transparent
-                transparent;
-        }
+      
         .movie-title {
             display: flex;
             align-items: center;

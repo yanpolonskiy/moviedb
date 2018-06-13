@@ -19,7 +19,11 @@ export function getDetails(
         fetch(
             `https://api.themoviedb.org/3/movie/${movieID}?api_key=${api_key}&language=ru-ru`
         ).then(response => {
-            resolve(response.json());
+            if (response.status === 200) {
+                resolve(response.json());
+            } else {
+                reject("Что-то пошло не так в запросе");
+            }
         });
     });
 }
@@ -32,9 +36,13 @@ export function getSimilarMovies(
         fetch(
             `https://api.themoviedb.org/3/movie/${movieID}/similar?api_key=${api_key}&language=ru-ru&page=1`
         ).then(response => {
-            resolve(response.json());
+            if (response.status === 200) {
+                resolve(response.json());
+            } else {
+                reject("Что-то пошло не так в запросе");
+            }
+        });
     });
-});
 }
 
 export function consoleResponse(response) {

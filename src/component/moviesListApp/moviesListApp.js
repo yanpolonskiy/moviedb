@@ -23,6 +23,7 @@ class MoviesListApp extends Component {
             total_pages: 1,
             isPopUpVisible: false,
             popUpId: -1,
+            isLoadingData: false,
             detailedMovieId: null
         };
     }
@@ -35,23 +36,28 @@ class MoviesListApp extends Component {
                 total_pages: data.total_pages
             });
             loadPopularMovies(data.results);
-        });
+        }, message => console.log(message));
     }
 
     loadMovies() {
         if (
             window.innerHeight + window.scrollY <
-            document.body.offsetHeight - 400
+                document.body.offsetHeight - 100 ||
+            this.state.total_pages === this.state.page + 1 || this.state.isLoadingData
         )
             return false;
         let newPage = this.state.page + 1;
         const { loadPopularMovies } = this.props;
+        this.setState({
+            isLoadingData: true
+        })
         getPopular(newPage).then(data => {
             loadPopularMovies(data.results);
             this.setState({
-                page: newPage
+                page: newPage,                              
+                isLoadingData: false
             });
-        });
+        }, message => console.log(message));
     }
 
     changeDetailedMovieId(id) {
@@ -88,19 +94,17 @@ class MoviesListApp extends Component {
             <div id="movies-list-app" onScroll={this.loadMovies.bind(window)}>
                 <div className="menu">
                     <FilterInput placeholder="Введите название фильма" />
-                    <button onClick={this.openFavorites.bind(this)}>                        
+                    <button onClick={this.openFavorites.bind(this)}>
                         Избранное
                     </button>
                 </div>
                 <PopularMoviesList
-                    isPopUpVisible={this.state.isPopUpVisible}                    
+                    isPopUpVisible={this.state.isPopUpVisible}
                     favorites={this.props.favorites}
-                    popularMovies={this.props.popuparMovies}
+                    popularMovies={this.props.popularMovies}
                     addFavoriteMovie={this.props.addFavoriteMovie}
                     openDetail={this.openDetail.bind(this)}
-                    changeDetailedMovieId={this.changeDetailedMovieId.bind(
-                        this
-                    )}
+                    changeDetailedMovieId={this.changeDetailedMovieId.bind(this)}
                 />
                 <Popup
                     id={this.state.popUpId}
@@ -130,7 +134,7 @@ class MoviesListApp extends Component {
 
 const putStateToProps = state => {
     return {
-        popuparMovies: state.popuparMovies,
+        popularMovies: state.popularMovies,
         favorites: state.favorites
     };
 };

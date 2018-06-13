@@ -1,6 +1,6 @@
 import * as constants from '../constants/storeConstans';
 export const initialState = {
-    popuparMovies: [],
+    popularMovies: [],
     favorites: [383498, 284054, 482560]
 }
 
@@ -9,7 +9,7 @@ export const rootReducer = (state = initialState, action) => {
         case constants.LOAD_POPULAR_MOVIES:
             return {
                 ...state,
-                popuparMovies: [].concat(state.popuparMovies, action.payload)
+                popularMovies: [].concat(state.popularMovies, action.payload)
             };
 
         case constants.ADD_FAVORITE_MOVIE:
