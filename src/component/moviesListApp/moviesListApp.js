@@ -41,7 +41,7 @@ class MoviesListApp extends Component {
     loadMovies() {
         if (
             window.innerHeight + window.scrollY <
-            document.body.offsetHeight - 2
+            document.body.offsetHeight - 400
         )
             return false;
         let newPage = this.state.page + 1;
