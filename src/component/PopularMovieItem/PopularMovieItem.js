@@ -76,7 +76,7 @@ export class PopularMovieItem extends Component {
                         Жанры: {this.state.genres} <br />
                         Бюджет: {this.state.budget}
                     </span>
-                    <button onClick={this.addFavoriteMovie.bind(this)}>В избранное</button>
+                    <button onClick={this.addFavoriteMovie.bind(this)} className={this.props.isInFavorite ? "in-favorite" : ""} >{this.props.isInFavorite ? "В избранном" : "В избранное"}</button>
                 </div>
                 <div className="background" />
             </li>

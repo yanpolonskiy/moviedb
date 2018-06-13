@@ -88,13 +88,13 @@ class MoviesListApp extends Component {
             <div id="movies-list-app" onScroll={this.loadMovies.bind(window)}>
                 <div className="menu">
                     <FilterInput placeholder="Введите название фильма" />
-                    <button onClick={this.openFavorites.bind(this)}>
-                        {" "}
-                        Избранное{" "}
+                    <button onClick={this.openFavorites.bind(this)}>                        
+                        Избранное
                     </button>
                 </div>
                 <PopularMoviesList
-                    isPopUpVisible={this.state.isPopUpVisible}
+                    isPopUpVisible={this.state.isPopUpVisible}                    
+                    favorites={this.props.favorites}
                     popularMovies={this.props.popuparMovies}
                     addFavoriteMovie={this.props.addFavoriteMovie}
                     openDetail={this.openDetail.bind(this)}

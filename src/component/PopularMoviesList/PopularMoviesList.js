@@ -10,6 +10,7 @@ export const PopularMoviesList = props => {
             {props.popularMovies.map((movie, i) => (
                 <PopularMovieItem
                     key={guid()}
+                    isInFavorite={props.favorites.includes(movie.id)}
                     movie={movie}
                     openDetail={props.openDetail}
                     changeDetailedMovieId={props.changeDetailedMovieId}
