@@ -13,7 +13,7 @@ export class PopularMovieItem extends Component {
         };
     }
 
-    componentDidMount() {       
+    componentDidMount() {
         getDetails(this.props.movie.id).then(details =>
             this.setDetails(details)
         );
@@ -44,7 +44,7 @@ export class PopularMovieItem extends Component {
         });
     }
 
-    addFavoriteMovie(event) {    
+    addFavoriteMovie(event) {
         event.stopPropagation();
         this.props.addFavoriteMovie(this.props.movie.id);
     }
@@ -67,6 +67,7 @@ export class PopularMovieItem extends Component {
                     style={{
                         visibility: this.state.isShow ? "visible" : "hidden"
                     }}
+                    onClick={this.stopPropagation}
                 >
                     <h2 className="movie-title">
                         {movie.title} ({release_date})
@@ -76,7 +77,12 @@ export class PopularMovieItem extends Component {
                         Жанры: {this.state.genres} <br />
                         Бюджет: {this.state.budget}
                     </span>
-                    <button onClick={this.addFavoriteMovie.bind(this)} className={this.props.isInFavorite ? "in-favorite" : ""} >{this.props.isInFavorite ? "В избранном" : "В избранное"}</button>
+                    <button
+                        onClick={this.addFavoriteMovie.bind(this)}
+                        className={this.props.isInFavorite ? "in-favorite" : ""}
+                    >
+                    {this.props.isInFavorite ? "В избранном" : "В избранное"}                        
+                    </button>
                 </div>
                 <div className="background" />
             </li>
