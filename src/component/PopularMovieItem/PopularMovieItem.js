@@ -14,8 +14,16 @@ export class PopularMovieItem extends Component {
     }
 
     componentDidMount() {
+        this.getMovieDetails();
+    }
+
+    getMovieDetails() {
         getDetails(this.props.movie.id).then(details =>
-            this.setDetails(details)
+            this.setDetails(details),
+            error => {
+                console.log(error);
+                this.getMovieDetails();
+            }
         );
     }
 

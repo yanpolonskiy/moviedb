@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import "./moviesListApp.less";
 import InfiniteScroll from "react-infinite-scroller";
 
-import { guid } from "../../helpers/utils.js";
+import { isNeedToLoad, filtration } from "../../helpers/utils.js";
 import * as actions from "../../store/actions";
 import { PopularMoviesList } from "../PopularMoviesList/PopularMoviesList";
 import { Favorites } from "../Favorites/Favorites";
@@ -30,34 +30,48 @@ class MoviesListApp extends Component {
     componentDidMount() {
         window.addEventListener("scroll", this.loadMovies.bind(this));
         const { loadPopularMovies, loadSimilarMovies } = this.props;
-        getPopular(this.state.page).then(data => {
-            this.setState({
-                detailedMovieId: data.results[0].id,
-                total_pages: data.total_pages
-            });
-            loadPopularMovies(data.results);
-        }, message => console.log(message));
+        getPopular(this.state.page).then(
+            data => {
+                this.setState({
+                    detailedMovieId: data.results[0].id,
+                    total_pages: data.total_pages
+                });
+                loadPopularMovies(data.results);
+            },
+            message => console.log(message)
+        );
     }
 
-    loadMovies() {
+    loadMovies(isNotScroll = false) {
+        if (!isNotScroll) {
         if (
-            window.innerHeight + window.scrollY <
-                document.body.offsetHeight - 100 ||
-            this.state.total_pages === this.state.page + 1 || this.state.isLoadingData
+            !isNeedToLoad() ||
+            this.state.total_pages === this.state.page + 1 ||
+            this.state.isLoadingData
         )
             return false;
+    }
         let newPage = this.state.page + 1;
         const { loadPopularMovies } = this.props;
         this.setState({
             isLoadingData: true
-        })
-        getPopular(newPage).then(data => {
-            loadPopularMovies(data.results);
-            this.setState({
-                page: newPage,                              
-                isLoadingData: false
-            });
-        }, message => console.log(message));
+        });
+        getPopular(newPage).then(
+            data => {
+                if (data.results && data.results.length) {
+                    loadPopularMovies(data.results);
+                    this.setState({
+                        page: newPage,
+                        isLoadingData: false
+                    });
+                } else {
+                    this.setState({
+                        isLoadingData: false
+                    });
+                }
+            },
+            message => console.log(message)
+        );
     }
 
     changeDetailedMovieId(id) {
@@ -89,11 +103,25 @@ class MoviesListApp extends Component {
         document.querySelector("body").style.overflowY = "hidden";
     }
 
+    filtration(e) {
+        this.props.changeFilterWord(e.target.value);
+        if(e.target.value === '') return false;
+        let B = document.body;
+        let DE = document.documentElement;
+        let S = Math.max(B.scrollTop, DE.scrollTop, window.pageYOffset);
+        if (S === 0) {
+            this.loadMovies(true);
+        }        
+    }
+
     render() {
         return (
             <div id="movies-list-app" onScroll={this.loadMovies.bind(window)}>
                 <div className="menu">
-                    <FilterInput placeholder="Введите название фильма" />
+                    <FilterInput
+                        placeholder="Введите название фильма"
+                        onInput={this.filtration.bind(this)}
+                    />
                     <button onClick={this.openFavorites.bind(this)}>
                         Избранное
                     </button>
@@ -105,7 +133,9 @@ class MoviesListApp extends Component {
                     addFavoriteMovie={this.props.addFavoriteMovie}
                     deleteFavoriteMovie={this.props.deleteFavoriteMovie}
                     openDetail={this.openDetail.bind(this)}
-                    changeDetailedMovieId={this.changeDetailedMovieId.bind(this)}
+                    changeDetailedMovieId={this.changeDetailedMovieId.bind(
+                        this
+                    )}
                 />
                 <Popup
                     id={this.state.popUpId}
@@ -135,7 +165,11 @@ class MoviesListApp extends Component {
 
 const putStateToProps = state => {
     return {
-        popularMovies: state.popularMovies,
+        popularMovies: filtration(
+            state.popularMovies,
+            ["title"],
+            state.filterWord
+        ),
         favorites: state.favorites
     };
 };
@@ -153,7 +187,8 @@ const putActionsToProps = dispatch => {
         deleteFavoriteMovie: bindActionCreators(
             actions.deleteFavoriteMovie,
             dispatch
-        )
+        ),
+        changeFilterWord: bindActionCreators(actions.changeFilterWord, dispatch)
     };
 };
 

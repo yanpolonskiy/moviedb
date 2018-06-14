@@ -6,7 +6,14 @@ export function getPopular(
         fetch(
             `https://api.themoviedb.org/3/movie/popular?api_key=${api_key}&language=ru-ru&page=${page}`
         ).then(response => {
-            resolve(response.json());
+            try {
+                if (response.status !== 200)
+                throw new Error('getPopularError');
+                resolve(response.json());
+            }
+            catch (e) {
+                reject(e.message);
+            }
         });
     });
 }
@@ -19,10 +26,13 @@ export function getDetails(
         fetch(
             `https://api.themoviedb.org/3/movie/${movieID}?api_key=${api_key}&language=ru-ru`
         ).then(response => {
-            if (response.status === 200) {
+            try {
+                if (response.status !== 200)
+                throw new Error('getDetailsError');
                 resolve(response.json());
-            } else {
-                reject("Что-то пошло не так в запросе");
+            }
+            catch (e) {
+                reject(e.message);       
             }
         });
     });
@@ -35,12 +45,8 @@ export function getSimilarMovies(
     return new Promise((resolve, reject) => {
         fetch(
             `https://api.themoviedb.org/3/movie/${movieID}/similar?api_key=${api_key}&language=ru-ru&page=1`
-        ).then(response => {            
-            if (response.status === 200) {
+        ).then(response => {
                 resolve(response.json());
-            } else {
-                reject("Что-то пошло не так в запросе");
-            }
         });
     });
 }
@@ -48,7 +54,3 @@ export function getSimilarMovies(
 export function consoleResponse(response) {
     console.log(response);
 }
-
-//https://api.themoviedb.org/3/movie/550?api_key=8045d0c665abeac3296af280966d176e
-
-//

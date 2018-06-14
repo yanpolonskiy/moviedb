@@ -1,7 +1,8 @@
 import * as constants from '../constants/storeConstans';
 export const initialState = {
     popularMovies: [],
-    favorites: [383498]
+    favorites: [383498],
+    filterWord: ''
 }
 
 export const rootReducer = (state = initialState, action) => {
@@ -24,6 +25,11 @@ export const rootReducer = (state = initialState, action) => {
             ...state,
             favorites: state.favorites.filter( id => id !== action.payload)
         }
+        case constants.CHANGE_FILTER_WORD:
+            return {
+                ...state,
+                filterWord: action.payload
+            }
         
     }
     return state;

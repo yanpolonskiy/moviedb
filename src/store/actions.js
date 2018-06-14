@@ -21,3 +21,10 @@ export const deleteFavoriteMovie = (id) => {
         payload: id
     }
 }
+
+export const changeFilterWord = (word) => {
+    return {
+        type: constants.CHANGE_FILTER_WORD,
+        payload: word
+    }
+}
