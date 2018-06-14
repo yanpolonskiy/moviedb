@@ -35,7 +35,7 @@ export function getSimilarMovies(
     return new Promise((resolve, reject) => {
         fetch(
             `https://api.themoviedb.org/3/movie/${movieID}/similar?api_key=${api_key}&language=ru-ru&page=1`
-        ).then(response => {
+        ).then(response => {            
             if (response.status === 200) {
                 resolve(response.json());
             } else {

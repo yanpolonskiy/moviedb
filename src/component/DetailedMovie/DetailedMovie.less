@@ -1,37 +1,43 @@
 .detailed-movie {
     display: flex;
     align-items: center;
-    align-items: top;
-    justify-content: space-between;
+    justify-content: space-around;
     flex: 1 0 50%;
     position: relative;
+    align-items: flex-start;
+    padding-top: 4%;
     img {
         margin-left: 2em;
+        align-self: top;
         border: 10px solid rgba(102, 102, 102, 0.76);
     }
     .detailed-info {
         display: flex;
         flex-direction: column;
         margin-left: 2em;
-        height: 300px;
-        justify-content: space-around;
+        flex: 1 0 1px;        
+    justify-content: flex-start;
+        height: 100%;
         font-family: "Awesome";
         span {
             display: block;
+            flex: 1 0 1px;
+            word-wrap: normal;
         }
 
         .movie-title {
+            display: block;
             font-size: 36px;
             display: block;
-            height: 30%;
+            flex: 1 0 1px;
+            max-height: 100px;
         }
         .description {
             font-size: 20px;
-            height: 50%;
         }
         .genres {
             font-size: 16px;
-            height: 20%;
+            max-height: 50px;
         }
     }
 }

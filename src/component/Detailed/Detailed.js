@@ -28,8 +28,9 @@ export class Detailed extends Component {
             isLoading: true
         });
         getDetails(nextProps.id).then(movie => this.setNewMovie(movie));
-        getSimilarMovies(nextProps.id).then(response =>
+        getSimilarMovies(nextProps.id).then(response => {
             this.setNewFavMovies(response.results)
+        }
         );
     }
 
@@ -41,6 +42,13 @@ export class Detailed extends Component {
     }
 
     setNewFavMovies(newSimMovies) {
+        if (newSimMovies.length < 1) {
+            this.setState({
+                favMovies: [],
+                isLoadingFavMovies: false
+            });
+            return;
+        }
         let updatedMovies = newSimMovies;
         updatedMovies.length = 4;
         this.setState({

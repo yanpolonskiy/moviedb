@@ -8,8 +8,7 @@ import { guid } from "../../helpers/utils.js";
 export const SimilarMovies = props => {
     return (
         <div className="similar-movies-container">
-            <LoadAnimator isLoading={props.isLoading} />
-            <h2> Похожие фильмы </h2>
+            <h2>{props.movies.length > 1 ? 'Похожие фильмы' : 'Похожих фильмов нет'} </h2>
             <ul className="similar-movies-list">
                 {props.movies.map((movie, i) => (
                     <SimilarMovieItem
