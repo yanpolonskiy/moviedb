@@ -55,7 +55,7 @@ export class Favorites extends Component {
                 <ul className="favorite-list">
                     {this.state.favoriteMovies.map(movie => (
                         <FavoriteItem
-                            key={movie.id}
+                            key={guid()}
                             movie={movie}
                             openDetail={this.props.openDetail}
                             deleteFavoriteMovie={this.props.deleteFavoriteMovie}

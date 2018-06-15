@@ -16,7 +16,7 @@
         flex-direction: column;
         margin-left: 2em;
         flex: 1 0 1px;        
-    justify-content: flex-start;
+          justify-content: flex-start;
         height: 100%;
         font-family: "Awesome";
         span {
@@ -32,6 +32,11 @@
             flex: 1 0 1px;
             max-height: 100px;
         }
+
+        .budget {
+            max-height: 20px;
+        }
+
         .description {
             font-size: 20px;
         }
@@ -40,7 +45,33 @@
             max-height: 50px;
         }
     }
+    button {
+        text-decoration: none;
+        position: absolute;        
+        text-align: center;
+        width: 45px;
+        height: 45px;        
+        right: 70px;
+        top: 20px;
+        border: solid 2px white;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        font-weight: bold;
+        background-color: black;
+        outline: none;
+        cursor: pointer;
+        background-image: url('../../images/favoriteWhite.png');
+        background-size: cover;
+        &.in-favorite {            
+        background-color: white;
+        background-image: url('../../images/favorite.png');
+        }
+    }
+
 }
+
+
 
 @font-face {
     font-family: "Awesome";

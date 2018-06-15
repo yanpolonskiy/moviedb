@@ -69,6 +69,9 @@ export class Detailed extends Component {
                     isLoading={this.state.isLoadingMovie}
                     openDetail={this.props.openDetail}
                     changeDetailedMovieId={this.props.changeDetailedMovieId}
+                    isInFavorite={this.props.favorites.includes(this.state.movie.id)}
+                    addFavoriteMovie={this.props.addFavoriteMovie}
+                    deleteFavoriteMovie={this.props.deleteFavoriteMovie}
                 />
                 <SimilarMovies
                     movies={this.state.favMovies}

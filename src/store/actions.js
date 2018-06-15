@@ -8,6 +8,13 @@ export const loadMovies = (movies) => {
     };
 };
 
+export const loadFavorites = (favorites) => {
+    return {
+        type: constants.LOAD_FAVORITES_FROM_STORAGE,
+        payload: favorites
+    }
+}
+
 export const addFavoriteMovie = (id) => {
     return {
         type: constants.ADD_FAVORITE_MOVIE,

@@ -13,27 +13,6 @@ export class MovieItem extends Component {
         };
     }
 
-    componentDidMount() {
-        this.getMovieDetails();
-    }
-
-    getMovieDetails() {
-        getDetails(this.props.movie.id).then(details =>
-            this.setDetails(details),
-            error => {
-                console.log(error);
-                this.getMovieDetails();
-            }
-        );
-    }
-
-    setDetails(details) {
-        let newGenres = details.genres.map(genre => genre.name);
-        this.setState({
-            genres: newGenres.join(", "),
-            budget: details.budget + "$"
-        });
-    }
 
     openDetailInfo() {
         this.props.changeDetailedMovieId(this.props.movie.id);
@@ -63,8 +42,15 @@ export class MovieItem extends Component {
     }
 
     render() {
-        const { movie } = this.props;
+        const { movie, genreList } = this.props;     
         const release_date = new Date(movie.release_date).getFullYear();
+        let genres = (genreList && genreList.length) ? genreList.reduce((genres, current) => {            
+            if (movie.genre_ids.includes(current.id)) {
+                genres.push(current.name);
+                return genres;
+            }
+            return genres;
+        }, []).join(', ') : "loading";
         return (
             <li
                 className="movie-item"
@@ -87,8 +73,7 @@ export class MovieItem extends Component {
                     </h2>
                     <span className="short-info">
                         Рейтинг: {movie.vote_average} <br />
-                        Жанры: {this.state.genres} <br />
-                        Бюджет: {this.state.budget}
+                        Жанры: {genres} <br />
                     </span>
                     <button
                         onClick={this.props.isInFavorite ? this.deleteFavoriteMovie.bind(this) : this.addFavoriteMovie.bind(this)}

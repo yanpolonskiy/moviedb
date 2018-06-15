@@ -11,18 +11,21 @@ import { MoviesList } from "../MoviesList/MoviesList";
 import { Favorites } from "../Favorites/Favorites";
 import { Popup } from "../PopUp/PopUp";
 import { Detailed } from "../Detailed/Detailed";
+import { get as storageGet } from "../../helpers/localStorage"; 
 
 import { FilterInput } from "../FilterInput/FilterInput";
 import {
     getPopular,
     getSimilarMovies,
-    searchMovies
+    searchMovies,
+    getGenreList
 } from "../../helpers/moviedbapi";
 
 class MoviesListApp extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            genreList: [],
             page: 1,
             total_pages: 1,
             isPopUpVisible: false,
@@ -33,7 +36,7 @@ class MoviesListApp extends Component {
     }
     componentDidMount() {
         window.addEventListener("scroll", this.loadMovies.bind(this));
-        const { loadMovies } = this.props;
+        const { loadMovies, loadFavorites } = this.props;
         getPopular(this.state.page).then(
             data => {
                 this.setState({
@@ -44,6 +47,15 @@ class MoviesListApp extends Component {
             },
             message => console.log(message)
         );
+        getGenreList(this.state.page).then(
+            data => {
+                this.setState({
+                    genreList: data.genres,
+                });
+            },
+            message => console.log(message)
+        );
+        loadFavorites(storageGet('favorites'));
     }
 
     loadMovies() {
@@ -189,8 +201,8 @@ class MoviesListApp extends Component {
                 <MoviesList
                     isPopUpVisible={this.state.isPopUpVisible}
                     favorites={this.props.favorites}
+                    genreList={this.state.genreList}
                     movies={this.props.movies}
-                    isLoadingList={this.state.isLoadingData}
                     addFavoriteMovie={this.props.addFavoriteMovie}
                     deleteFavoriteMovie={this.props.deleteFavoriteMovie}
                     openDetail={this.openDetail.bind(this)}
@@ -217,6 +229,9 @@ class MoviesListApp extends Component {
                         changeDetailedMovieId={this.changeDetailedMovieId.bind(
                             this
                         )}
+                        favorites={this.props.favorites}
+                        addFavoriteMovie={this.props.addFavoriteMovie}
+                         deleteFavoriteMovie={this.props.deleteFavoriteMovie}
                     />
                 </Popup>
             </div>
@@ -247,7 +262,8 @@ const putActionsToProps = dispatch => {
             actions.changeSearchWord,
             dispatch
         ),
-        cleanMovies: bindActionCreators(actions.cleanMovies, dispatch)
+        cleanMovies: bindActionCreators(actions.cleanMovies, dispatch),
+        loadFavorites: bindActionCreators(actions.loadFavorites, dispatch)
     };
 };
 

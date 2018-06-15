@@ -39,6 +39,24 @@ export function searchMovies(
     });
 }
 
+export function getGenreList() {
+    return new Promise((resolve, reject) => {
+        fetch(
+            `https://api.themoviedb.org/3/genre/movie/list?api_key=3a9e6cc51801d61e4f390cf3193bc623&language=ru-ru`
+        ).then(response => {
+            try {
+                if (response.status !== 200)
+                throw new Error('getDetailsError');
+                resolve(response.json());
+            }
+            catch (e) {
+                reject(e.message);       
+            }
+        });
+    });
+}
+
+
 export function getDetails(
     movieID,
     api_key = "3a9e6cc51801d61e4f390cf3193bc623"
