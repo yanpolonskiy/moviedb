@@ -1,17 +1,18 @@
 import React, { Component } from "react";
-import "./PopularMoviesList.less";
+import "./MoviesList.less";
 
-import { PopularMovieItem } from "../PopularMovieItem/PopularMovieItem";
+import { MovieItem } from "../MovieItem/MovieItem";
 import { guid } from "../../helpers/utils.js";
 
-export const PopularMoviesList = props => {
+export const MoviesList = props => {  
     return (
         <ul className="movies-list">
-            {props.popularMovies.map((movie, i) => (
-                <PopularMovieItem
+            {props.movies.map((movie, i) => (
+                <MovieItem
                     key={movie.id}
                     isInFavorite={props.favorites.includes(movie.id)}
                     movie={movie}
+                    isLoadingList={props.isLoadingList}
                     openDetail={props.openDetail}
                     changeDetailedMovieId={props.changeDetailedMovieId}
                     addFavoriteMovie={props.addFavoriteMovie}
@@ -19,5 +20,5 @@ export const PopularMoviesList = props => {
                 />
             ))}
         </ul>
-    );
+    );    
 };

@@ -14,14 +14,13 @@ export function isNeedToLoad() {
     if (!O) O = B.clientHeight;
     let S = Math.max(B.scrollTop, DE.scrollTop, window.pageYOffset);
     let C = Math.max(B.scrollHeight, DE.scrollHeight);
-    if(S == 0) return false;
-    if (O + S < C-150)
+    if(S === 0) return true;
+    if (O + S < C-200)
     return false;
     return true;
 }
 
 export function filtration(array, properties, word) {
-    console.log(array);
     if (array.length < 1) return [];
     if (word === "") return array;
     return array.filter((item) => {
@@ -29,6 +28,7 @@ export function filtration(array, properties, word) {
         for (let i = 0; i < properties.length; i++) {
             if (item[properties[i]].toLowerCase().indexOf(word.toLowerCase()) !== -1)
                 flag = true;
+                break;
         }
         return flag;
     })

@@ -18,6 +18,27 @@ export function getPopular(
     });
 }
 
+export function searchMovies(
+    page = 1,
+    query = "",
+    api_key = "3a9e6cc51801d61e4f390cf3193bc623"    
+) {
+    return new Promise((resolve, reject) => {
+        fetch(
+            `https://api.themoviedb.org/3/search/movie?api_key=${api_key}&language=ru-ru&query=${query}&page=${page}`
+        ).then(response => {
+            try {
+                if (response.status !== 200)
+                throw new Error('searchMoviesError');
+                resolve(response.json());
+            }
+            catch (e) {
+                reject(e.message);
+            }
+        });
+    });
+}
+
 export function getDetails(
     movieID,
     api_key = "3a9e6cc51801d61e4f390cf3193bc623"

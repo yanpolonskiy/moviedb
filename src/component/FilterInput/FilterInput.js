@@ -6,7 +6,9 @@ export const FilterInput = (props) => {
         <input type="text"
             className="filter-input"
             onChange={props.onInput}
-            placeholder={props.placeholder}>
+            placeholder={props.placeholder}
+            onKeyPress={props.startSearch}
+            >
         </input>
     );
 }

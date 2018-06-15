@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { getDetails } from "../../helpers/moviedbapi";
 
-import "./PopularMovieItem.less";
+import "./MovieItem.less";
 
-export class PopularMovieItem extends Component {
+export class MovieItem extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -18,6 +18,13 @@ export class PopularMovieItem extends Component {
     }
 
     getMovieDetails() {
+        if (this.props.isLoadingList) {
+            setTimeout( () => { 
+                this.getMovieDetails();
+            }
+                , 2000);
+            return false;
+        }
         getDetails(this.props.movie.id).then(details =>
             this.setDetails(details),
             error => {

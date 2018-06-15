@@ -7,13 +7,17 @@ import InfiniteScroll from "react-infinite-scroller";
 
 import { isNeedToLoad, filtration } from "../../helpers/utils.js";
 import * as actions from "../../store/actions";
-import { PopularMoviesList } from "../PopularMoviesList/PopularMoviesList";
+import { MoviesList } from "../MoviesList/MoviesList";
 import { Favorites } from "../Favorites/Favorites";
 import { Popup } from "../PopUp/PopUp";
 import { Detailed } from "../Detailed/Detailed";
 
 import { FilterInput } from "../FilterInput/FilterInput";
-import { getPopular, getSimilarMovies } from "../../helpers/moviedbapi";
+import {
+    getPopular,
+    getSimilarMovies,
+    searchMovies
+} from "../../helpers/moviedbapi";
 
 class MoviesListApp extends Component {
     constructor(props) {
@@ -29,49 +33,76 @@ class MoviesListApp extends Component {
     }
     componentDidMount() {
         window.addEventListener("scroll", this.loadMovies.bind(this));
-        const { loadPopularMovies, loadSimilarMovies } = this.props;
+        const { loadMovies } = this.props;
         getPopular(this.state.page).then(
             data => {
                 this.setState({
                     detailedMovieId: data.results[0].id,
                     total_pages: data.total_pages
                 });
-                loadPopularMovies(data.results);
+                loadMovies(data.results);
             },
             message => console.log(message)
         );
     }
 
-    loadMovies(isNotScroll = false) {
-        if (!isNotScroll) {
+    loadMovies() {
         if (
             !isNeedToLoad() ||
             this.state.total_pages === this.state.page + 1 ||
             this.state.isLoadingData
         )
             return false;
-    }
         let newPage = this.state.page + 1;
-        const { loadPopularMovies } = this.props;
+        const { loadMovies } = this.props;
         this.setState({
             isLoadingData: true
         });
-        getPopular(newPage).then(
-            data => {
-                if (data.results && data.results.length) {
-                    loadPopularMovies(data.results);
-                    this.setState({
-                        page: newPage,
-                        isLoadingData: false
-                    });
-                } else {
+        if (!this.props.searchWord) {
+            getPopular(newPage).then(
+                data => {
+                    if (data.results && data.results.length) {
+                        loadMovies(data.results);
+                        this.setState({
+                            page: newPage,
+                            isLoadingData: false
+                        });
+                    } else {
+                        this.setState({
+                            isLoadingData: false
+                        });
+                    }
+                },
+                message => {
+                    console.log(message);
                     this.setState({
                         isLoadingData: false
                     });
                 }
-            },
-            message => console.log(message)
-        );
+            );
+        } else {
+            searchMovies(newPage, this.props.searchWord).then(
+                data => {
+                    if (data.results && data.results.length) {
+                        loadMovies(data.results);
+                        this.setState({
+                            page: newPage,
+                            isLoadingData: false
+                        });
+                    } else {
+                        this.setState({
+                            isLoadingData: false
+                        });
+                    }
+                },
+                message => {
+                    console.log(message);
+                    this.setState({
+                        isLoadingData: false
+                    });
+                }
+            );
+        }
     }
 
     changeDetailedMovieId(id) {
@@ -103,33 +134,87 @@ class MoviesListApp extends Component {
         document.querySelector("body").style.overflowY = "hidden";
     }
 
-    filtration(e) {
-        this.props.changeFilterWord(e.target.value);
-        if(e.target.value === '') return false;
-        let B = document.body;
-        let DE = document.documentElement;
-        let S = Math.max(B.scrollTop, DE.scrollTop, window.pageYOffset);
-        if (S === 0) {
-            this.loadMovies(true);
-        }        
+    search(event) {
+        if (event.which !== 13) return false;
+        const { loadMovies, cleanMovies } = this.props;
+        cleanMovies();
+        if (!this.props.searchWord) {
+            this.setState({
+                isLoadingData: true
+            });
+            getPopular(1).then(
+                data => {
+                    if (data.results && data.results.length) {
+                        loadMovies(data.results);
+                        this.setState({
+                            total_pages: data.total_pages,
+                            isLoadingData: false
+                        });
+                    } else {
+                        this.setState({
+                            isLoadingData: false
+                        });
+                    }
+                },
+                message => {
+                    console.log(message);
+                    this.setState({
+                        isLoadingData: false
+                    });
+                }
+            );
+        } else {
+            this.setState({
+                isLoadingData: true
+            });
+            searchMovies(1, this.props.searchWord).then(
+                data => {
+                    if (data.results && data.results.length) {
+                        loadMovies(data.results);
+                        this.setState({
+                            total_pages: data.total_pages,
+                            isLoadingData: false
+                        });
+                    } else {
+                        this.setState({
+                            isLoadingData: false
+                        });
+                    }
+                },
+                message => {
+                    console.log(message);
+                    this.setState({
+                        isLoadingData: false
+                    });
+                }
+            );
+        }
+    }
+
+    loadPopular(page) {
+        
     }
 
     render() {
         return (
-            <div id="movies-list-app" onScroll={this.loadMovies.bind(window)}>
+            <div id="movies-list-app">
                 <div className="menu">
                     <FilterInput
                         placeholder="Введите название фильма"
-                        onInput={this.filtration.bind(this)}
+                        onInput={e =>
+                            this.props.changeSearchWord(e.target.value)
+                        }
+                        startSearch={this.search.bind(this)}
                     />
                     <button onClick={this.openFavorites.bind(this)}>
                         Избранное
                     </button>
                 </div>
-                <PopularMoviesList
+                <MoviesList
                     isPopUpVisible={this.state.isPopUpVisible}
                     favorites={this.props.favorites}
-                    popularMovies={this.props.popularMovies}
+                    movies={this.props.movies}
+                    isLoadingList={this.state.isLoadingData}
                     addFavoriteMovie={this.props.addFavoriteMovie}
                     deleteFavoriteMovie={this.props.deleteFavoriteMovie}
                     openDetail={this.openDetail.bind(this)}
@@ -165,21 +250,15 @@ class MoviesListApp extends Component {
 
 const putStateToProps = state => {
     return {
-        popularMovies: filtration(
-            state.popularMovies,
-            ["title"],
-            state.filterWord
-        ),
-        favorites: state.favorites
+        movies: state.movies,
+        favorites: state.favorites,
+        searchWord: state.searchWord
     };
 };
 
 const putActionsToProps = dispatch => {
     return {
-        loadPopularMovies: bindActionCreators(
-            actions.loadPopularMovies,
-            dispatch
-        ),
+        loadMovies: bindActionCreators(actions.loadMovies, dispatch),
         addFavoriteMovie: bindActionCreators(
             actions.addFavoriteMovie,
             dispatch
@@ -188,7 +267,11 @@ const putActionsToProps = dispatch => {
             actions.deleteFavoriteMovie,
             dispatch
         ),
-        changeFilterWord: bindActionCreators(actions.changeFilterWord, dispatch)
+        changeSearchWord: bindActionCreators(
+            actions.changeSearchWord,
+            dispatch
+        ),
+        cleanMovies: bindActionCreators(actions.cleanMovies, dispatch)
     };
 };
 

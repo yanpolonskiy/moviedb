@@ -1,10 +1,10 @@
 import * as constants from '../constants/storeConstans';
 import { sortObjectByName } from '../helpers/utils'
 
-export const loadPopularMovies = (popuparMovies) => {
+export const loadMovies = (movies) => {
     return {
-        type: constants.LOAD_POPULAR_MOVIES,
-        payload: popuparMovies
+        type: constants.LOAD_MOVIES,
+        payload: movies
     };
 };
 
@@ -22,9 +22,15 @@ export const deleteFavoriteMovie = (id) => {
     }
 }
 
-export const changeFilterWord = (word) => {
+export const changeSearchWord = (word) => {
     return {
-        type: constants.CHANGE_FILTER_WORD,
+        type: constants.CHANGE_SEARCH_WORD,
         payload: word
+    }
+}
+
+export const cleanMovies = () => {
+    return {
+        type: constants.CLEAN_MOVIES
     }
 }
