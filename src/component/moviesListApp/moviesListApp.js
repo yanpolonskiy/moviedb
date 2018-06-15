@@ -55,6 +55,7 @@ class MoviesListApp extends Component {
             },
             message => console.log(message)
         );
+        console.log(storageGet('favorites'));
         loadFavorites(storageGet('favorites'));
     }
 

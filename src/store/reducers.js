@@ -33,7 +33,7 @@ export const rootReducer = (state = initialState, action) => {
 
         case constants.DELETE_FAVORITE_MOVIE:
         let filteredFavorites = state.favorites.filter(id => id !== action.payload);
-        storageRemove('favorites', filteredFavorites);
+        storageSet('favorites', filteredFavorites);
             return {
                 ...state,
                 favorites: filteredFavorites
