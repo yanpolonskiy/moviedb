@@ -1,10 +1,9 @@
 import React, { Component } from "react";
-import { FavoriteItem } from "../FavoriteItem/FavoriteItem";
-import { guid } from "../../helpers/utils.js";
-import { getDetails } from "../../helpers/moviedbapi";
-import { LoadAnimator } from "../LoadAnimator/LoadAnimator";
-
 import "./Favorites.less";
+
+import { FavoriteItem } from "../FavoriteItem/FavoriteItem";
+
+import { getDetails } from "../../helpers/moviedbapi";
 
 export class Favorites extends Component {
     constructor(props) {
@@ -13,30 +12,6 @@ export class Favorites extends Component {
             favoriteMovies: [],
         };
     }
-
-    componentDidMount() {
-        const { favorites } = this.props;
-     
-        for (let i = 0; i < favorites.length; i++) {
-            getDetails(favorites[i]).then(data => {
-                this.addFavorite(data, i);
-            });
-        }
-    }
-
-    
-    componentWillReceiveProps(nextProps) {
-        const { favorites } = nextProps;
-        this.setState({
-            favoriteMovies: []
-        })
-        for (let i = 0; i < favorites.length; i++) {
-            getDetails(favorites[i]).then(data => {
-                this.addFavorite(data, i);
-            });
-        }
-    }
-
 
     addFavorite(data, index) {
         this.setState({
@@ -53,10 +28,10 @@ export class Favorites extends Component {
             <div className="favorites-container" onClick={this.stopPropagation}>               
                 <h2>Избранное</h2>
                 <ul className="favorite-list">
-                    {this.state.favoriteMovies.map(movie => (
+                    {this.props.favorites.map(id => (
                         <FavoriteItem
-                            key={guid()}
-                            movie={movie}
+                            key={id}
+                            id={id}
                             openDetail={this.props.openDetail}
                             deleteFavoriteMovie={this.props.deleteFavoriteMovie}
                             changeDetailedMovieId={
@@ -69,9 +44,3 @@ export class Favorites extends Component {
         );
     }
 }
-
-/*
-{this.props.favorites.map((item) => 
-            <FavoriteItem key={guid()} id={item}/>
-            )}
-*/

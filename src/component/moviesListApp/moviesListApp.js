@@ -3,23 +3,23 @@ import ReactDOM from "react-dom";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import "./moviesListApp.less";
-import InfiniteScroll from "react-infinite-scroller";
 
-import { isNeedToLoad, filtration } from "../../helpers/utils.js";
 import * as actions from "../../store/actions";
 import { MoviesList } from "../MoviesList/MoviesList";
 import { Favorites } from "../Favorites/Favorites";
 import { Popup } from "../PopUp/PopUp";
 import { Detailed } from "../Detailed/Detailed";
-import { get as storageGet } from "../../helpers/localStorage"; 
-
 import { FilterInput } from "../FilterInput/FilterInput";
+
+import { isNeedToLoad, filtration } from "../../helpers/utils.js";
+import { get as storageGet } from "../../helpers/localStorage"; 
 import {
     getPopular,
     getSimilarMovies,
     searchMovies,
     getGenreList
 } from "../../helpers/moviedbapi";
+
 
 class MoviesListApp extends Component {
     constructor(props) {
@@ -35,7 +35,7 @@ class MoviesListApp extends Component {
         };
     }
     componentDidMount() {
-        window.addEventListener("scroll", this.loadMovies.bind(this));
+        window.addEventListener("scroll", this.scrollHandler.bind(this));
         const { loadMovies, loadFavorites } = this.props;
         getPopular(this.state.page).then(
             data => {
@@ -55,9 +55,31 @@ class MoviesListApp extends Component {
             },
             message => console.log(message)
         );
-        console.log(storageGet('favorites'));
         loadFavorites(storageGet('favorites'));
     }
+
+    scrollHandler() {
+        this.loadMovies();
+        this.trackScroll();
+    }
+
+   trackScroll() {       
+    let goTopBtn = document.querySelector('.back-to-top');
+        let scrolled = window.pageYOffset;
+        let coords = document.documentElement.clientHeight-850;    
+        if (scrolled > coords) {
+          goTopBtn.classList.add('show');
+        }
+        if (scrolled < coords) {
+          goTopBtn.classList.remove('show');
+        }
+      }
+
+      backToTop() {
+        if (window.pageYOffset > 0) {
+            window.scroll(0, 10);
+          }
+      }
 
     loadMovies() {
         if (
@@ -216,6 +238,7 @@ class MoviesListApp extends Component {
                     isVisible={this.state.isPopUpVisible}
                     closePopUp={this.closePopUp.bind(this)}
                 >
+                {   this.state.isPopUpVisible &&
                     <Favorites
                         favorites={this.props.favorites}
                         openDetail={this.openDetail.bind(this)}
@@ -224,6 +247,8 @@ class MoviesListApp extends Component {
                             this
                         )}
                     />
+                }
+                { this.state.isPopUpVisible &&
                     <Detailed
                         id={this.state.detailedMovieId}
                         openDetail={this.openDetail.bind(this)}
@@ -234,7 +259,9 @@ class MoviesListApp extends Component {
                         addFavoriteMovie={this.props.addFavoriteMovie}
                          deleteFavoriteMovie={this.props.deleteFavoriteMovie}
                     />
+                    }
                 </Popup>
+                <a className="back-to-top" title="Наверх" onClick={this.backToTop.bind(this)}>↑</a>
             </div>
         );
     }

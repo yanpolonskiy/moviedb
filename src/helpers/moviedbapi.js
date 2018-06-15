@@ -90,6 +90,3 @@ export function getSimilarMovies(
     });
 }
 
-export function consoleResponse(response) {
-    console.log(response);
-}

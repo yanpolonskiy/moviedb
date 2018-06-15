@@ -1,5 +1,5 @@
 import * as constants from '../constants/storeConstans';
-import { sortObjectByName } from '../helpers/utils'
+import { sortObjectByName } from '../helpers/utils';
 
 export const loadMovies = (movies) => {
     return {
@@ -15,7 +15,7 @@ export const loadFavorites = (favorites) => {
     }
 }
 
-export const addFavoriteMovie = (id) => {
+export const addFavoriteMovie = (id) => {    
     return {
         type: constants.ADD_FAVORITE_MOVIE,
         payload: id

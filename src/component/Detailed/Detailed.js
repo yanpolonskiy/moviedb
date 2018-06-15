@@ -1,9 +1,11 @@
 import React, { Component } from "react";
+import "./Detailed.less";
+
 import { DetailedMovie } from "../DetailedMovie/DetailedMovie";
 import { SimilarMovies } from "../SimilarMovies/SimilarMovies";
+
 import { getDetails, getSimilarMovies } from "../../helpers/moviedbapi";
 
-import "./Detailed.less";
 
 export class Detailed extends Component {
     constructor(props) {
@@ -29,9 +31,8 @@ export class Detailed extends Component {
         });
         getDetails(nextProps.id).then(movie => this.setNewMovie(movie));
         getSimilarMovies(nextProps.id).then(response => {
-            this.setNewFavMovies(response.results)
-        }
-        );
+            this.setNewFavMovies(response.results);
+        });
     }
 
     setNewMovie(newMovie) {
@@ -69,7 +70,9 @@ export class Detailed extends Component {
                     isLoading={this.state.isLoadingMovie}
                     openDetail={this.props.openDetail}
                     changeDetailedMovieId={this.props.changeDetailedMovieId}
-                    isInFavorite={this.props.favorites.includes(this.state.movie.id)}
+                    isInFavorite={this.props.favorites.includes(
+                        this.state.movie.id
+                    )}
                     addFavoriteMovie={this.props.addFavoriteMovie}
                     deleteFavoriteMovie={this.props.deleteFavoriteMovie}
                 />

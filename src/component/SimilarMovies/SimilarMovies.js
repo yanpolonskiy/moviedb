@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import "./SimilarMovies.less";
-import { SimilarMovieItem } from "../SimilarMovieItem/SimilarMovieItem";
-import { LoadAnimator } from "../LoadAnimator/LoadAnimator";
 
-import { guid } from "../../helpers/utils.js";
+import { SimilarMovieItem } from "../SimilarMovieItem/SimilarMovieItem";
 
 export const SimilarMovies = props => {
     return (

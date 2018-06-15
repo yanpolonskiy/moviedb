@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { getDetails } from "../../helpers/moviedbapi";
-
 import "./MovieItem.less";
+
+import { getDetails } from "../../helpers/moviedbapi";
 
 export class MovieItem extends Component {
     constructor(props) {
