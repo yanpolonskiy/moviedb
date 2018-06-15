@@ -53,56 +53,20 @@ class MoviesListApp extends Component {
             this.state.isLoadingData
         )
             return false;
-        let newPage = this.state.page + 1;
-        const { loadMovies } = this.props;
-        this.setState({
-            isLoadingData: true
-        });
-        if (!this.props.searchWord) {
-            getPopular(newPage).then(
-                data => {
-                    if (data.results && data.results.length) {
-                        loadMovies(data.results);
-                        this.setState({
-                            page: newPage,
-                            isLoadingData: false
-                        });
-                    } else {
-                        this.setState({
-                            isLoadingData: false
-                        });
-                    }
-                },
-                message => {
-                    console.log(message);
-                    this.setState({
-                        isLoadingData: false
-                    });
-                }
-            );
-        } else {
-            searchMovies(newPage, this.props.searchWord).then(
-                data => {
-                    if (data.results && data.results.length) {
-                        loadMovies(data.results);
-                        this.setState({
-                            page: newPage,
-                            isLoadingData: false
-                        });
-                    } else {
-                        this.setState({
-                            isLoadingData: false
-                        });
-                    }
-                },
-                message => {
-                    console.log(message);
-                    this.setState({
-                        isLoadingData: false
-                    });
-                }
-            );
+        const { loadMovies } = this.props;        
+        if (!this.state.isLoadingData) {
+            this.setState({
+                isLoadingData: true
+            });
+            if (!this.props.searchWord) {
+                this.loadPopularMovies(this.state.page + 1);
+            } else {
+                this.loadSearchMovies(this.state.page + 1);
+            }
         }
+        this.setState({
+            page: this.state.page + 1
+        })
     }
 
     changeDetailedMovieId(id) {
@@ -134,65 +98,77 @@ class MoviesListApp extends Component {
         document.querySelector("body").style.overflowY = "hidden";
     }
 
-    search(event) {
+    search(event) {        
+        const { cleanMovies } = this.props;
         if (event.which !== 13) return false;
-        const { loadMovies, cleanMovies } = this.props;
         cleanMovies();
-        if (!this.props.searchWord) {
+        this.setState({
+            page: 1
+        })
+        if (!this.state.isLoadingData) {
             this.setState({
                 isLoadingData: true
             });
-            getPopular(1).then(
-                data => {
-                    if (data.results && data.results.length) {
-                        loadMovies(data.results);
-                        this.setState({
-                            total_pages: data.total_pages,
-                            isLoadingData: false
-                        });
-                    } else {
-                        this.setState({
-                            isLoadingData: false
-                        });
-                    }
-                },
-                message => {
-                    console.log(message);
-                    this.setState({
-                        isLoadingData: false
-                    });
-                }
-            );
-        } else {
-            this.setState({
-                isLoadingData: true
-            });
-            searchMovies(1, this.props.searchWord).then(
-                data => {
-                    if (data.results && data.results.length) {
-                        loadMovies(data.results);
-                        this.setState({
-                            total_pages: data.total_pages,
-                            isLoadingData: false
-                        });
-                    } else {
-                        this.setState({
-                            isLoadingData: false
-                        });
-                    }
-                },
-                message => {
-                    console.log(message);
-                    this.setState({
-                        isLoadingData: false
-                    });
-                }
-            );
-        }
+            if (!this.props.searchWord) {
+                this.loadPopularMovies(this.state.page);
+            } else {
+                this.loadSearchMovies(this.state.page);
+            }
+        }        
     }
 
-    loadPopular(page) {
-        
+    loadPopularMovies(page) {        
+        const { loadMovies } = this.props;
+        this.setState({
+            isLoadingData: true
+        });
+        getPopular(page).then(
+            data => {
+                if (data.results && data.results.length) {
+                    loadMovies(data.results);
+                    this.setState({
+                        isLoadingData: false
+                    });
+                } else {
+                    this.setState({
+                        isLoadingData: false
+                    });
+                }
+            },
+            message => {
+                console.log(message);
+                this.setState({
+                    isLoadingData: false
+                });
+            }
+        );
+    }
+
+    loadSearchMovies(page) {        
+        const { loadMovies } = this.props;
+        this.setState({
+            isLoadingData: true
+        });
+        searchMovies(page, this.props.searchWord).then(
+            data => {
+                if (data.results && data.results.length) {
+                    loadMovies(data.results);
+                    this.setState({
+                        isLoadingData: false
+                    });
+                } else {
+                    this.setState({
+                        isLoadingData: false
+                    });
+                }
+            },
+            message => {
+                console.log(message);
+                this.setState({
+                    isLoadingData: false
+                });
+            }
+        );
     }
 
     render() {

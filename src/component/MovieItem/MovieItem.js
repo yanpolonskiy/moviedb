@@ -18,13 +18,6 @@ export class MovieItem extends Component {
     }
 
     getMovieDetails() {
-        if (this.props.isLoadingList) {
-            setTimeout( () => { 
-                this.getMovieDetails();
-            }
-                , 2000);
-            return false;
-        }
         getDetails(this.props.movie.id).then(details =>
             this.setDetails(details),
             error => {
