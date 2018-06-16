@@ -1,2 +1,2 @@
-import '../css/style.less';
+import '../less/style.less';
 import './react';
