@@ -218,7 +218,7 @@ class MoviesListApp extends Component {
                         startSearch={this.search.bind(this)}
                     />
                     <button onClick={this.openFavorites.bind(this)}>
-                        Избранное
+                        Избранное: {this.props.favorites.length}
                     </button>
                 </div>
                 <MoviesList
