@@ -12,14 +12,13 @@ import { Detailed } from "../Detailed/Detailed";
 import { FilterInput } from "../FilterInput/FilterInput";
 
 import { isNeedToLoad, filtration } from "../../helpers/utils.js";
-import { get as storageGet } from "../../helpers/localStorage"; 
+import { get as storageGet } from "../../helpers/localStorage";
 import {
     getPopular,
     getSimilarMovies,
     searchMovies,
     getGenreList
 } from "../../helpers/moviedbapi";
-
 
 class MoviesListApp extends Component {
     constructor(props) {
@@ -50,12 +49,12 @@ class MoviesListApp extends Component {
         getGenreList(this.state.page).then(
             data => {
                 this.setState({
-                    genreList: data.genres,
+                    genreList: data.genres
                 });
             },
             message => console.log(message)
         );
-        loadFavorites(storageGet('favorites'));
+        loadFavorites(storageGet("favorites"));
     }
 
     scrollHandler() {
@@ -63,23 +62,23 @@ class MoviesListApp extends Component {
         this.trackScroll();
     }
 
-   trackScroll() {       
-    let goTopBtn = document.querySelector('.back-to-top');
+    trackScroll() {
+        let goTopBtn = document.querySelector(".back-to-top");
         let scrolled = window.pageYOffset;
-        let coords = document.documentElement.clientHeight-850;    
+        let coords = document.documentElement.clientHeight - 850;
         if (scrolled > coords) {
-          goTopBtn.classList.add('show');
+            goTopBtn.classList.add("show");
         }
         if (scrolled < coords) {
-          goTopBtn.classList.remove('show');
+            goTopBtn.classList.remove("show");
         }
-      }
+    }
 
-      backToTop() {
+    backToTop() {
         if (window.pageYOffset > 0) {
             window.scroll(0, 10);
-          }
-      }
+        }
+    }
 
     loadMovies() {
         if (
@@ -88,7 +87,7 @@ class MoviesListApp extends Component {
             this.state.isLoadingData
         )
             return false;
-        const { loadMovies } = this.props;        
+        const { loadMovies } = this.props;
         if (!this.state.isLoadingData) {
             this.setState({
                 isLoadingData: true
@@ -101,7 +100,7 @@ class MoviesListApp extends Component {
         }
         this.setState({
             page: this.state.page + 1
-        })
+        });
     }
 
     changeDetailedMovieId(id) {
@@ -133,26 +132,27 @@ class MoviesListApp extends Component {
         document.querySelector("body").style.overflowY = "hidden";
     }
 
-    search(event) {        
+    search(event) {
         const { cleanMovies } = this.props;
         if (event.which !== 13) return false;
         cleanMovies();
-        this.setState({
-            page: 1
-        })
         if (!this.state.isLoadingData) {
             this.setState({
                 isLoadingData: true
             });
             if (!this.props.searchWord) {
-                this.loadPopularMovies(this.state.page);
+                this.loadPopularMovies(1);
             } else {
-                this.loadSearchMovies(this.state.page);
+                this.loadSearchMovies(1);
             }
-        }        
+
+            this.setState({
+                page: 1
+            });
+        }
     }
 
-    loadPopularMovies(page) {        
+    loadPopularMovies(page) {
         const { loadMovies } = this.props;
         this.setState({
             isLoadingData: true
@@ -179,7 +179,7 @@ class MoviesListApp extends Component {
         );
     }
 
-    loadSearchMovies(page) {        
+    loadSearchMovies(page) {
         const { loadMovies } = this.props;
         this.setState({
             isLoadingData: true
@@ -238,30 +238,36 @@ class MoviesListApp extends Component {
                     isVisible={this.state.isPopUpVisible}
                     closePopUp={this.closePopUp.bind(this)}
                 >
-                {   this.state.isPopUpVisible &&
-                    <Favorites
-                        favorites={this.props.favorites}
-                        openDetail={this.openDetail.bind(this)}
-                        deleteFavoriteMovie={this.props.deleteFavoriteMovie}
-                        changeDetailedMovieId={this.changeDetailedMovieId.bind(
-                            this
-                        )}
-                    />
-                }
-                { this.state.isPopUpVisible &&
-                    <Detailed
-                        id={this.state.detailedMovieId}
-                        openDetail={this.openDetail.bind(this)}
-                        changeDetailedMovieId={this.changeDetailedMovieId.bind(
-                            this
-                        )}
-                        favorites={this.props.favorites}
-                        addFavoriteMovie={this.props.addFavoriteMovie}
-                         deleteFavoriteMovie={this.props.deleteFavoriteMovie}
-                    />
-                    }
+                    {this.state.isPopUpVisible && (
+                        <Favorites
+                            favorites={this.props.favorites}
+                            openDetail={this.openDetail.bind(this)}
+                            deleteFavoriteMovie={this.props.deleteFavoriteMovie}
+                            changeDetailedMovieId={this.changeDetailedMovieId.bind(
+                                this
+                            )}
+                        />
+                    )}
+                    {this.state.isPopUpVisible && (
+                        <Detailed
+                            id={this.state.detailedMovieId}
+                            openDetail={this.openDetail.bind(this)}
+                            changeDetailedMovieId={this.changeDetailedMovieId.bind(
+                                this
+                            )}
+                            favorites={this.props.favorites}
+                            addFavoriteMovie={this.props.addFavoriteMovie}
+                            deleteFavoriteMovie={this.props.deleteFavoriteMovie}
+                        />
+                    )}
                 </Popup>
-                <a className="back-to-top" title="Наверх" onClick={this.backToTop.bind(this)}>↑</a>
+                <a
+                    className="back-to-top"
+                    title="Наверх"
+                    onClick={this.backToTop.bind(this)}
+                >
+                    ↑
+                </a>
             </div>
         );
     }
