@@ -1,5 +1,4 @@
 import * as constants from "../constants/storeConstans";
-import { set as storageSet, remove as storageRemove} from '../helpers/localStorage';
 
 export const initialState = {
     movies: [],
@@ -22,21 +21,15 @@ export const rootReducer = (state = initialState, action) => {
             };
 
         case constants.ADD_FAVORITE_MOVIE:
-            let addedFavorites = state.favorites.includes(action.payload)
-                ? state.favorites
-                : [].concat(state.favorites, action.payload);
-            storageSet('favorites', addedFavorites);
             return {
                 ...state,
-                favorites: addedFavorites
+                favorites: action.payload
             };
 
         case constants.DELETE_FAVORITE_MOVIE:
-        let filteredFavorites = state.favorites.filter(id => id !== action.payload);
-        storageSet('favorites', filteredFavorites);
-            return {
+           return {
                 ...state,
-                favorites: filteredFavorites
+                favorites: action.payload
             };
         case constants.CHANGE_SEARCH_WORD:
             return {

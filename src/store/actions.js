@@ -1,7 +1,7 @@
 import * as constants from '../constants/storeConstans';
 import { sortObjectByName } from '../helpers/utils';
 
-export const loadMovies = (movies) => {
+export const loadMovies = movies => {
     console.log(movies);
     return {
         type: constants.LOAD_MOVIES,
@@ -9,28 +9,28 @@ export const loadMovies = (movies) => {
     };
 };
 
-export const loadFavorites = (favorites) => {
+export const loadFavorites = favorites => {
     return {
         type: constants.LOAD_FAVORITES_FROM_STORAGE,
         payload: favorites
     }
 }
 
-export const addFavoriteMovie = (id) => {    
+export const addFavoriteMovie = addedFavorites => {    
     return {
         type: constants.ADD_FAVORITE_MOVIE,
-        payload: id
+        payload: addedFavorites
     }
 }
 
-export const deleteFavoriteMovie = (id) => {
+export const deleteFavoriteMovie = filteredFavorites => {
     return {
         type: constants.DELETE_FAVORITE_MOVIE,
-        payload: id
+        payload: filteredFavorites
     }
 }
 
-export const changeSearchWord = (word) => {
+export const changeSearchWord = word => {
     return {
         type: constants.CHANGE_SEARCH_WORD,
         payload: word

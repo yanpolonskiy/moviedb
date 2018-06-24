@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import "./Detailed.less";
 
 import { DetailedMovie } from "../DetailedMovie/DetailedMovie";
@@ -7,15 +7,13 @@ import { SimilarMovies } from "../SimilarMovies/SimilarMovies";
 import * as mvApi from "../../helpers/moviedbapi";
 
 
-export class Detailed extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
+export class Detailed extends React.Component {
+        state = {
             movie: {},
             simMovies: [],
             isLoadingMovie: true
         };
-    }
+ 
 
     componentDidMount() {
         mvApi.get(4, 1, '', this.props.id).then(movie => this.setNewMovie(movie));
@@ -25,18 +23,17 @@ export class Detailed extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps)
         this.setState({
             isLoadingMovie: true
         });
-        mvApi.get(4, 1, '', this.props.id).then(movie => this.setNewMovie(movie));
-        mvApi.get(2, 1, '', this.props.id).then(response => {
+        mvApi.get(4, 1, '', nextProps.id).then(movie => this.setNewMovie(movie));
+        mvApi.get(2, 1, '', nextProps.id).then(response => {
             this.setNewsimMovies(response.results);
         });
     }
     
 
-    setNewMovie = newMovie => {
+    setNewMovie = newMovie => {   
         this.setState({
             movie: newMovie,
             isLoadingMovie: false

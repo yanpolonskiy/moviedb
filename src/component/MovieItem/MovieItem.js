@@ -15,7 +15,6 @@ export class MovieItem extends Component {
         this.props.openDetail();
     }
 
-
     addFavoriteMovie = event => {
         event.stopPropagation();
         this.props.addFavoriteMovie(this.props.movie.id);
@@ -26,7 +25,14 @@ export class MovieItem extends Component {
         this.props.deleteFavoriteMovie(this.props.movie.id);
     }
 
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        if (nextProps.isInFavorite === !this.props.isInFavorite) return true;
+        if (this.props.genreList !== nextProps.genreList) return true;
+        return false;
+    }
+
     render() {
+        console.log('s');
         const { movie, genreList, isInFavorite } = this.props;     
         const release_date = new Date(movie.release_date).getFullYear();
         let genres = (genreList && genreList.length) ? genreList.reduce((genres, current) => {            

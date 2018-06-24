@@ -3,21 +3,23 @@ import "./MoviesList.less";
 
 import { MovieItem } from "../MovieItem/MovieItem";
 
-export const MoviesList = props => {      
+export class MoviesList extends React.PureComponent {  
+    render() {
     return (
         <ul className="movies-list">
-            {props.movies.map((movie, i) => (
+            {this.props.movies.map((movie, i) => (
                 <MovieItem
                     key={movie.id}
-                    isInFavorite={props.favorites.includes(movie.id)}
+                    isInFavorite={this.props.favorites.includes(movie.id)}
                     movie={movie}
-                    genreList={props.genreList}
-                    openDetail={props.openDetail}
-                    changeDetailedMovieId={props.changeDetailedMovieId}
-                    addFavoriteMovie={props.addFavoriteMovie}
-                    deleteFavoriteMovie={props.deleteFavoriteMovie}
+                    genreList={this.props.genreList}
+                    openDetail={this.props.openDetail}
+                    changeDetailedMovieId={this.props.changeDetailedMovieId}
+                    addFavoriteMovie={this.props.addFavoriteMovie}
+                    deleteFavoriteMovie={this.props.deleteFavoriteMovie}
                 />
             ))}
         </ul>
-    );    
+    );   
+} 
 };

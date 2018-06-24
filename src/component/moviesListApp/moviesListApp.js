@@ -10,7 +10,8 @@ import { Popup } from "../PopUp/PopUp";
 import { FilterInput } from "../FilterInput/FilterInput";
 
 import { isNeedToLoad, disableScrolling, enableScrolling } from "../../helpers/utils.js";
-import { get as storageGet } from "../../helpers/localStorage";
+import { get as storageGet, set as storageSet } from "../../helpers/localStorage";
+
 import * as mvApi from "../../helpers/moviedbapi";
 
 class MoviesListApp extends Component {
@@ -27,7 +28,7 @@ class MoviesListApp extends Component {
         };
     }
     componentDidMount() {
-        window.addEventListener("scroll", this.scrollHandler.bind(this));
+        window.addEventListener("scroll", this.scrollHandler);
         const { loadMovies, loadFavorites } = this.props;
         this.requestMovies(1, this.state.page);
         mvApi.get(5).then(
@@ -128,6 +129,18 @@ class MoviesListApp extends Component {
         );
     }
 
+    addFavoriteMovie = id => {
+        let addedFavorites = [].concat(storageGet('favorites'), id);
+        storageSet('favorites', addedFavorites);
+        this.props.addFavoriteMovie(addedFavorites);
+    }
+
+    deleteFavoriteMovie = id => {
+        let filteredFavorites = this.props.favorites.filter(item => item !== id);
+        storageSet('favorites', filteredFavorites);
+        this.props.deleteFavoriteMovie(filteredFavorites);
+    }
+
     search = event => {
         const { cleanMovies } = this.props;
         if (event.which !== 13) return false;
@@ -157,9 +170,9 @@ class MoviesListApp extends Component {
                     closePopUp={this.closePopUp}
                     favorites={favorites}
                     openDetail={() => this.openPopUp(1)}
-                    deleteFavoriteMovie={deleteFavoriteMovie}
+                    deleteFavoriteMovie={this.deleteFavoriteMovie}
                     changeDetailedMovieId={this.changeDetailedMovieId}
-                    addFavoriteMovie={addFavoriteMovie}
+                    addFavoriteMovie={this.addFavoriteMovie}
                 >
                     
                 </Popup>
@@ -176,12 +189,11 @@ class MoviesListApp extends Component {
                     </button>
                 </div>
                 <MoviesList
-                    isPopUpVisible={isPopUpVisible}
                     favorites={favorites}
                     genreList={genreList}
                     movies={movies}
-                    addFavoriteMovie={addFavoriteMovie}
-                    deleteFavoriteMovie={deleteFavoriteMovie}
+                    addFavoriteMovie={this.addFavoriteMovie}
+                    deleteFavoriteMovie={this.deleteFavoriteMovie}
                     openDetail={() => this.openPopUp(1)}
                     changeDetailedMovieId={this.changeDetailedMovieId}
                 />
