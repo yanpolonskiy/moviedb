@@ -1,30 +1,25 @@
+/**
+ * Проверяет необходимо ли подгрузить фильмы (скролл находится ниже 200 пикселей от низа)
+ */
+
 export function isNeedToLoad() {
-    let B = document.body;
-    let DE = document.documentElement;
-    let O = Math.min(B.clientHeight, DE.clientHeight);    
+    let B = document.body; //сокрещание body
+    let DE = document.documentElement; //сокращение document.element
+    let O = Math.min(B.clientHeight, DE.clientHeight);     // уточнение значения
     if (!O) O = B.clientHeight;
-    let S = Math.max(B.scrollTop, DE.scrollTop, window.pageYOffset);
-    let C = Math.max(B.scrollHeight, DE.scrollHeight);
+    let S = Math.max(B.scrollTop, DE.scrollTop, window.pageYOffset); //положение скролла
+    let C = Math.max(B.scrollHeight, DE.scrollHeight); // высота скролла
     if (O + S < C-200)
     return false;
     return true;
 }
 
-export function filtration(array, properties, word) {
-    if (array.length < 1) return [];
-    if (word === "") return array;
-    return array.filter((item) => {
-        let flag = false;
-        for (let i = 0; i < properties.length; i++) {
-            if (item[properties[i]].toLowerCase().indexOf(word.toLowerCase()) !== -1)
-                flag = true;
-                break;
-        }
-        return flag;
-    })
-}
-
+/**
+ * форматирует вывод числа в строку по 3 знака
+ * @param {*} str 
+ */
 export function formatNum(str) {
+    str = '' + str;
     str = str.replace(/(\.(.*))/g, '');
     let arr = str.split('');
     let str_temp = '';
@@ -40,3 +35,22 @@ export function formatNum(str) {
         return str;
     }
 }
+
+/**
+ * отключает скролл
+ */
+
+export function disableScrolling(){
+    var x=window.scrollX;
+    var y=window.scrollY;
+    window.onscroll=function(){window.scrollTo(x, y);};
+}
+
+/**
+ * Включает скролл
+ */
+
+export function enableScrolling(){
+    window.onscroll=function(){};
+}
+

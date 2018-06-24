@@ -6,19 +6,12 @@ import "./moviesListApp.less";
 
 import * as actions from "../../store/actions";
 import { MoviesList } from "../MoviesList/MoviesList";
-import { Favorites } from "../Favorites/Favorites";
 import { Popup } from "../PopUp/PopUp";
-import { Detailed } from "../Detailed/Detailed";
 import { FilterInput } from "../FilterInput/FilterInput";
 
-import { isNeedToLoad, filtration } from "../../helpers/utils.js";
+import { isNeedToLoad, disableScrolling, enableScrolling } from "../../helpers/utils.js";
 import { get as storageGet } from "../../helpers/localStorage";
-import {
-    getPopular,
-    getSimilarMovies,
-    searchMovies,
-    getGenreList
-} from "../../helpers/moviedbapi";
+import * as mvApi from "../../helpers/moviedbapi";
 
 class MoviesListApp extends Component {
     constructor(props) {
@@ -36,17 +29,8 @@ class MoviesListApp extends Component {
     componentDidMount() {
         window.addEventListener("scroll", this.scrollHandler.bind(this));
         const { loadMovies, loadFavorites } = this.props;
-        getPopular(this.state.page).then(
-            data => {
-                this.setState({
-                    detailedMovieId: data.results[0].id,
-                    total_pages: data.total_pages
-                });
-                loadMovies(data.results);
-            },
-            message => console.log(message)
-        );
-        getGenreList(this.state.page).then(
+        this.requestMovies(1, this.state.page);
+        mvApi.get(5).then(
             data => {
                 this.setState({
                     genreList: data.genres
@@ -57,12 +41,12 @@ class MoviesListApp extends Component {
         loadFavorites(storageGet("favorites"));
     }
 
-    scrollHandler() {
+    scrollHandler = () => {
         this.loadMovies();
         this.trackScroll();
     }
 
-    trackScroll() {
+    trackScroll = () => {
         let goTopBtn = document.querySelector(".back-to-top");
         let scrolled = window.pageYOffset;
         let coords = document.documentElement.clientHeight - 850;
@@ -74,13 +58,13 @@ class MoviesListApp extends Component {
         }
     }
 
-    backToTop() {
+    backToTop = () => {
         if (window.pageYOffset > 0) {
             window.scroll(0, 10);
         }
     }
 
-    loadMovies() {
+    loadMovies = () => {
         if (
             !isNeedToLoad() ||
             this.state.total_pages === this.state.page + 1 ||
@@ -89,182 +73,123 @@ class MoviesListApp extends Component {
             return false;
         const { loadMovies } = this.props;
         if (!this.state.isLoadingData) {
-            this.setState({
-                isLoadingData: true
-            });
             if (!this.props.searchWord) {
-                this.loadPopularMovies(this.state.page + 1);
+                this.requestMovies(1, this.state.page + 1);
             } else {
-                this.loadSearchMovies(this.state.page + 1);
+                this.requestMovies(3, this.state.page + 1);
             }
         }
-        this.setState({
-            page: this.state.page + 1
-        });
     }
 
-    changeDetailedMovieId(id) {
+    changeDetailedMovieId = id => {
         this.setState({
             detailedMovieId: id
         });
     }
 
-    closePopUp() {
+    closePopUp = () => {
         this.setState({
             isPopUpVisible: false
         });
-        document.querySelector("body").style.overflowY = "scroll";
+        enableScrolling();
+       // document.querySelector("body").style.overflowY = "scroll";
     }
 
-    openFavorites() {
+
+    openPopUp = id => {
         this.setState({
             isPopUpVisible: true,
-            popUpId: 0
+            popUpId: id
         });
-        document.querySelector("body").style.overflowY = "hidden";
+        disableScrolling();
+       // document.querySelector("body").style.overflowY = "hidden";
     }
 
-    openDetail() {
+    requestMovies = (type, page) => {
+        const { loadMovies } = this.props;
         this.setState({
-            isPopUpVisible: true,
-            popUpId: 1
+            isLoadingData: true
         });
-        document.querySelector("body").style.overflowY = "hidden";
+        mvApi.get(type, page, this.props.searchWord).then(
+            data => {
+                if (data.results && data.results.length) {
+                    loadMovies(data.results);
+                    this.setState({
+                        page: this.state.page + 1
+                    });
+                }
+                this.setState({
+                    isLoadingData: false
+                });
+            },
+            message => {
+                console.log(message);
+            }
+        );
     }
 
-    search(event) {
+    search = event => {
         const { cleanMovies } = this.props;
         if (event.which !== 13) return false;
         cleanMovies();
         if (!this.state.isLoadingData) {
-            this.setState({
-                isLoadingData: true
-            });
             if (!this.props.searchWord) {
-                this.loadPopularMovies(1);
+                this.requestMovies(1, 1);
             } else {
-                this.loadSearchMovies(1);
+                this.requestMovies(3, 1);
             }
-
             this.setState({
                 page: 1
             });
         }
     }
 
-    loadPopularMovies(page) {
-        const { loadMovies } = this.props;
-        this.setState({
-            isLoadingData: true
-        });
-        getPopular(page).then(
-            data => {
-                if (data.results && data.results.length) {
-                    loadMovies(data.results);
-                    this.setState({
-                        isLoadingData: false
-                    });
-                } else {
-                    this.setState({
-                        isLoadingData: false
-                    });
-                }
-            },
-            message => {
-                console.log(message);
-                this.setState({
-                    isLoadingData: false
-                });
-            }
-        );
-    }
-
-    loadSearchMovies(page) {
-        const { loadMovies } = this.props;
-        this.setState({
-            isLoadingData: true
-        });
-        searchMovies(page, this.props.searchWord).then(
-            data => {
-                if (data.results && data.results.length) {
-                    loadMovies(data.results);
-                    this.setState({
-                        isLoadingData: false
-                    });
-                } else {
-                    this.setState({
-                        isLoadingData: false
-                    });
-                }
-            },
-            message => {
-                console.log(message);
-                this.setState({
-                    isLoadingData: false
-                });
-            }
-        );
-    }
-
     render() {
+        const { isPopUpVisible, genreList, popUpId, detailedMovieId } = this.state;
+        const {changeSearchWord, favorites, movies, addFavoriteMovie, deleteFavoriteMovie} = this.props;
+
         return (
             <div id="movies-list-app">
+            <Popup
+                    id={popUpId}
+                    dMovieId={detailedMovieId}
+                    isVisible={isPopUpVisible}
+                    closePopUp={this.closePopUp}
+                    favorites={favorites}
+                    openDetail={() => this.openPopUp(1)}
+                    deleteFavoriteMovie={deleteFavoriteMovie}
+                    changeDetailedMovieId={this.changeDetailedMovieId}
+                    addFavoriteMovie={addFavoriteMovie}
+                >
+                    
+                </Popup>
                 <div className="menu">
                     <FilterInput
                         placeholder="Введите название фильма"
                         onInput={e =>
-                            this.props.changeSearchWord(e.target.value)
+                            changeSearchWord(e.target.value)
                         }
-                        startSearch={this.search.bind(this)}
+                        startSearch={this.search.bind}
                     />
-                    <button onClick={this.openFavorites.bind(this)}>
-                        Избранное: {this.props.favorites.length}
+                    <button onClick={() => this.openPopUp(0)}>
+                        Избранное: {favorites.length}
                     </button>
                 </div>
                 <MoviesList
-                    isPopUpVisible={this.state.isPopUpVisible}
-                    favorites={this.props.favorites}
-                    genreList={this.state.genreList}
-                    movies={this.props.movies}
-                    addFavoriteMovie={this.props.addFavoriteMovie}
-                    deleteFavoriteMovie={this.props.deleteFavoriteMovie}
-                    openDetail={this.openDetail.bind(this)}
-                    changeDetailedMovieId={this.changeDetailedMovieId.bind(
-                        this
-                    )}
+                    isPopUpVisible={isPopUpVisible}
+                    favorites={favorites}
+                    genreList={genreList}
+                    movies={movies}
+                    addFavoriteMovie={addFavoriteMovie}
+                    deleteFavoriteMovie={deleteFavoriteMovie}
+                    openDetail={() => this.openPopUp(1)}
+                    changeDetailedMovieId={this.changeDetailedMovieId}
                 />
-                <Popup
-                    id={this.state.popUpId}
-                    isVisible={this.state.isPopUpVisible}
-                    closePopUp={this.closePopUp.bind(this)}
-                >
-                    {this.state.isPopUpVisible && (
-                        <Favorites
-                            favorites={this.props.favorites}
-                            openDetail={this.openDetail.bind(this)}
-                            deleteFavoriteMovie={this.props.deleteFavoriteMovie}
-                            changeDetailedMovieId={this.changeDetailedMovieId.bind(
-                                this
-                            )}
-                        />
-                    )}
-                    {this.state.isPopUpVisible && (
-                        <Detailed
-                            id={this.state.detailedMovieId}
-                            openDetail={this.openDetail.bind(this)}
-                            changeDetailedMovieId={this.changeDetailedMovieId.bind(
-                                this
-                            )}
-                            favorites={this.props.favorites}
-                            addFavoriteMovie={this.props.addFavoriteMovie}
-                            deleteFavoriteMovie={this.props.deleteFavoriteMovie}
-                        />
-                    )}
-                </Popup>
+                
                 <a
                     className="back-to-top"
                     title="Наверх"
-                    onClick={this.backToTop.bind(this)}
+                    onClick={this.backToTop}
                 >
                     ↑
                 </a>

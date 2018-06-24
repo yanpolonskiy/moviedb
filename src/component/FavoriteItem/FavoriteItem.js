@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { getDetails } from "../../helpers/moviedbapi";
+import  * as mvApi from "../../helpers/moviedbapi";
 
 import "./FavoriteItem.less";
 
@@ -13,30 +13,30 @@ export class FavoriteItem extends Component {
 
     componentDidMount() {
         const { id } = this.props;
-        getDetails(id).then(data => {
+        mvApi.get(4, 1, '', id).then(data => {
             this.setState({
                 details: data
             })
-        })
-     
+        })     
     }
 
-    openInfo() {
+    openInfo = () => {
         this.props.changeDetailedMovieId(this.state.details.id);
         this.props.openDetail();        
     }
 
-    deleteFavoriteMovie(event) {
+    deleteFavoriteMovie = event => {
         this.props.deleteFavoriteMovie(this.state.details.id);        
         event.stopPropagation();
     }
     render() {
         let { details } = this.state;
+        
     return (
-        <li className="favorite-item" onClick={this.openInfo.bind(this)}>
+        <li className="favorite-item" onClick={this.openInfo}>
             <img src={`https://image.tmdb.org/t/p/w200/${details.poster_path}`} />            
             <div className="background" />
-            <a className="delete-button" onClick={this.deleteFavoriteMovie.bind(this)}></a>
+            <a className="delete-button" onClick={this.deleteFavoriteMovie}></a>
         </li>
     );
 }

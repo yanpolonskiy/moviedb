@@ -4,27 +4,31 @@ import "./DetailedMovie.less";
 import { formatNum } from "../../helpers/utils";
 
 export class DetailedMovie extends Component {
-    addFavoriteMovie(event) {
+
+    addFavoriteMovie = event => {
         event.stopPropagation();
         this.props.addFavoriteMovie(this.props.movie.id);
     }
 
-    deleteFavoriteMovie(event) {        
+    deleteFavoriteMovie = event => {        
         event.stopPropagation();
         this.props.deleteFavoriteMovie(this.props.movie.id);
     }
+
     render() {
-    if (this.props.isLoading) {
+        const {isLoading, movie, isInFavorite } = this.props;
+
+    if (isLoading) {
         return (
             <div className="detailed-movie">
             </div>
         );
-    } else if (!this.props.isLoading) {
-        const movie = this.props.movie;
+    } else if (!isLoading) {
         const release_date = new Date(movie.release_date).getFullYear();
         const genres = movie.genres.map(genre => genre.name).join(", ");
-        const budget = formatNum('' + movie.budget);
+        const budget = formatNum(movie.budget);
         let title = movie.title + " " + release_date;
+        
         return (
             <div className="detailed-movie">
                 <img
@@ -37,8 +41,8 @@ export class DetailedMovie extends Component {
                     <span className="description">{movie.overview || "Нет описания"}</span>
                 </div>
                 <button
-                        onClick={this.props.isInFavorite ? this.deleteFavoriteMovie.bind(this) : this.addFavoriteMovie.bind(this)}
-                        className={this.props.isInFavorite ? "in-favorite" : ""}
+                        onClick={isInFavorite ? this.deleteFavoriteMovie : this.addFavoriteMovie}
+                        className={isInFavorite ? "in-favorite" : ""}
                     >                     
                  </button>
             </div>

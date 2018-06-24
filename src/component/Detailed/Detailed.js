@@ -4,7 +4,7 @@ import "./Detailed.less";
 import { DetailedMovie } from "../DetailedMovie/DetailedMovie";
 import { SimilarMovies } from "../SimilarMovies/SimilarMovies";
 
-import { getDetails, getSimilarMovies } from "../../helpers/moviedbapi";
+import * as mvApi from "../../helpers/moviedbapi";
 
 
 export class Detailed extends Component {
@@ -12,74 +12,75 @@ export class Detailed extends Component {
         super(props);
         this.state = {
             movie: {},
-            favMovies: [],
-            isLoadingMovie: true,
-            isLoadingFavMovies: true
+            simMovies: [],
+            isLoadingMovie: true
         };
     }
 
     componentDidMount() {
-        getDetails(this.props.id).then(movie => this.setNewMovie(movie));
-        getSimilarMovies(this.props.id).then(response =>
-            this.setNewFavMovies(response.results)
+        mvApi.get(4, 1, '', this.props.id).then(movie => this.setNewMovie(movie));
+        mvApi.get(2, 1, '', this.props.id).then(response =>
+            this.setNewsimMovies(response.results)
         );
     }
 
     componentWillReceiveProps(nextProps) {
+        console.log(nextProps)
         this.setState({
-            isLoading: true
+            isLoadingMovie: true
         });
-        getDetails(nextProps.id).then(movie => this.setNewMovie(movie));
-        getSimilarMovies(nextProps.id).then(response => {
-            this.setNewFavMovies(response.results);
+        mvApi.get(4, 1, '', this.props.id).then(movie => this.setNewMovie(movie));
+        mvApi.get(2, 1, '', this.props.id).then(response => {
+            this.setNewsimMovies(response.results);
         });
     }
+    
 
-    setNewMovie(newMovie) {
+    setNewMovie = newMovie => {
         this.setState({
             movie: newMovie,
             isLoadingMovie: false
         });
     }
 
-    setNewFavMovies(newSimMovies) {
+    setNewsimMovies = newSimMovies => {
         if (newSimMovies.length < 1) {
             this.setState({
-                favMovies: [],
-                isLoadingFavMovies: false
+                simMovies: []
             });
             return;
         }
-        let updatedMovies = newSimMovies;
-        updatedMovies.length = 4;
+        let updatedMovies = newSimMovies.splice(0, 4);
         this.setState({
-            favMovies: updatedMovies,
-            isLoadingFavMovies: false
+            simMovies: updatedMovies
         });
     }
 
-    stopPropagation(e) {
-        e.stopPropagation();
+    stopPropagation = event => {
+        event.stopPropagation();
     }
 
     render() {
+        const { isLoadingMovie, movie, simMovies } = this.state;
+        const { openDetail, changeDetailedMovieId, favorites, addFavoriteMovie, deleteFavoriteMovie} = this.props;
+
         return (
             <div className="detailed" onClick={this.stopPropagation}>
                 <DetailedMovie
-                    movie={this.state.movie}
-                    isLoading={this.state.isLoadingMovie}
-                    openDetail={this.props.openDetail}
-                    changeDetailedMovieId={this.props.changeDetailedMovieId}
-                    isInFavorite={this.props.favorites.includes(
-                        this.state.movie.id
+                    movie={movie}
+                    isLoading={isLoadingMovie}
+                    openDetail={openDetail}
+                    changeDetailedMovieId={changeDetailedMovieId}
+                    isInFavorite={favorites.includes(
+                        movie.id
                     )}
-                    addFavoriteMovie={this.props.addFavoriteMovie}
-                    deleteFavoriteMovie={this.props.deleteFavoriteMovie}
+                    addFavoriteMovie={addFavoriteMovie}
+                    deleteFavoriteMovie={deleteFavoriteMovie}
                 />
                 <SimilarMovies
-                    movies={this.state.favMovies}
-                    openDetail={this.props.openDetail}
-                    changeDetailedMovieId={this.props.changeDetailedMovieId}
+                    movies={simMovies}
+                    openDetail={openDetail}
+                    changeDetailedMovieId={changeDetailedMovieId}
                 />
             </div>
         );

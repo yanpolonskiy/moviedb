@@ -1,48 +1,33 @@
 import React, { Component } from "react";
 import "./MovieItem.less";
 
-import { getDetails } from "../../helpers/moviedbapi";
-
 export class MovieItem extends Component {
     constructor(props) {
         super(props);
         this.state = {
             genres: "",
             budget: "",
-            isShow: false
         };
     }
 
-
-    openDetailInfo() {
+    openDetailInfo = () => {
         this.props.changeDetailedMovieId(this.props.movie.id);
         this.props.openDetail();
     }
 
-    showInfo() {
-        this.setState({
-            isShow: true
-        });
-    }
 
-    hideInfo() {
-        this.setState({
-            isShow: false
-        });
-    }
-
-    addFavoriteMovie(event) {
+    addFavoriteMovie = event => {
         event.stopPropagation();
         this.props.addFavoriteMovie(this.props.movie.id);
     }
 
-    deleteFavoriteMovie(event) {        
+    deleteFavoriteMovie = event => {        
         event.stopPropagation();
         this.props.deleteFavoriteMovie(this.props.movie.id);
     }
 
     render() {
-        const { movie, genreList } = this.props;     
+        const { movie, genreList, isInFavorite } = this.props;     
         const release_date = new Date(movie.release_date).getFullYear();
         let genres = (genreList && genreList.length) ? genreList.reduce((genres, current) => {            
             if (movie.genre_ids.includes(current.id)) {
@@ -51,22 +36,17 @@ export class MovieItem extends Component {
             }
             return genres;
         }, []).join(', ') : "loading";
+        
         return (
             <li
                 className="movie-item"
-                onMouseOver={this.showInfo.bind(this)}
-                onMouseOut={this.hideInfo.bind(this)}
-                onClick={this.openDetailInfo.bind(this)}
+                onClick={this.openDetailInfo}
             >
                 <img
                     src={`https://image.tmdb.org/t/p/w200/${movie.poster_path}`}
                 />
                 <div
                     className="info"
-                    style={{
-                        visibility: this.state.isShow ? "visible" : "hidden"
-                    }}
-                    onClick={this.stopPropagation}
                 >
                     <h2 className="movie-title">
                         {movie.title} ({release_date})
@@ -76,10 +56,10 @@ export class MovieItem extends Component {
                         Жанры: {genres} <br />
                     </span>
                     <button
-                        onClick={this.props.isInFavorite ? this.deleteFavoriteMovie.bind(this) : this.addFavoriteMovie.bind(this)}
-                        className={this.props.isInFavorite ? "in-favorite" : ""}
+                        onClick={isInFavorite ? this.deleteFavoriteMovie : this.addFavoriteMovie}
+                        className={isInFavorite ? "in-favorite" : ""}
                     >
-                    {this.props.isInFavorite ? "В избранном" : "В избранное"}                        
+                    {isInFavorite ? "В избранном" : "В избранное"}                        
                     </button>
                 </div>
                 <div className="background" />

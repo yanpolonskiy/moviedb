@@ -23,7 +23,8 @@
             opacity: 1;
             &:before,
             &:after {
-                background-color: yellow;
+                border-color: black;
+                background-color: white;
             }
         }
         &:before,
@@ -33,12 +34,15 @@
             content: " ";
             height: 33px;
             width: 4px;
+            border: 1px double red;
             background-color: black;
         }
-        &:before {
+        &:before {            
+            
             transform: rotate(45deg);
         }
         &:after {
+            
             transform: rotate(-45deg);
         }
     }
