@@ -14,8 +14,14 @@ let conf = {
         rules: [{
                 exclude: /node_modules/,
                 test: /\.js$/,
-                loader: 'babel-loader'
-
+                loader: 'babel-loader',
+                query: {
+                    presets: [
+                        "env",
+                        "stage-0",
+                        "react"
+                    ]
+                }
             },
             {
                 exclude: /node_modules/, // don't transpile node_modules

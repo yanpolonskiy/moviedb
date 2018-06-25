@@ -28,10 +28,11 @@ class MoviesListApp extends Component {
         };
     }
     componentDidMount() {
+        
         window.addEventListener("scroll", this.scrollHandler);
         const { loadMovies, loadFavorites } = this.props;
-        this.requestMovies(1, this.state.page);
-        mvApi.get(5).then(
+       if (this.props.movies.length === 0) this.requestMovies(1, this.state.page);
+       mvApi.get(5).then(
             data => {
                 this.setState({
                     genreList: data.genres
@@ -39,7 +40,7 @@ class MoviesListApp extends Component {
             },
             message => console.log(message)
         );
-        loadFavorites(storageGet("favorites"));
+     //loadFavorites(storageGet("favorites"));
     }
 
     scrollHandler = () => {
