@@ -36,6 +36,10 @@ export const Popup = props => {
         }
     };
 
+    if (!props.isVisible) {
+        return  <div className={classNameContainer} onClick={props.closePopUp}/>
+    }
+
     return (
         <div className={classNameContainer} onClick={props.closePopUp}>
             {getPopupById(props.id)}

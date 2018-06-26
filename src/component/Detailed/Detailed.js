@@ -76,7 +76,7 @@ export class Detailed extends React.Component {
 
         if (isLoadingMovie || isLoadingSimMovies) {
             return (
-                <div className="detailed">
+                <div className="detailed" onClick={this.stopPropagation}>
                     <Spinner />
                 </div>
             );
