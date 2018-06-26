@@ -45,9 +45,9 @@ export class Detailed extends React.Component {
     };
 
     setNewsimMovies = newSimMovies => {
-        let updatedMovies = []
+        let updatedMovies = [];
         if (newSimMovies.length > 1) {
-          updatedMovies = newSimMovies.splice(0, 4);
+            updatedMovies = newSimMovies.splice(0, 4);
         }
         this.setState({
             simMovies: updatedMovies,
@@ -60,7 +60,12 @@ export class Detailed extends React.Component {
     };
 
     render() {
-        const { isLoadingMovie, movie, simMovies, isLoadingSimMovies } = this.state;
+        const {
+            isLoadingMovie,
+            movie,
+            simMovies,
+            isLoadingSimMovies
+        } = this.state;
         const {
             openDetail,
             changeDetailedMovieId,
@@ -71,10 +76,10 @@ export class Detailed extends React.Component {
 
         if (isLoadingMovie || isLoadingSimMovies) {
             return (
-            <div className="detailed">
-            <Spinner />
-            </div>
-            )
+                <div className="detailed">
+                    <Spinner />
+                </div>
+            );
         }
         return (
             <div className="detailed" onClick={this.stopPropagation}>

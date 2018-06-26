@@ -6,24 +6,24 @@ export class MovieItem extends Component {
         super(props);
         this.state = {
             genres: "",
-            budget: "",
+            budget: ""
         };
     }
 
     openDetailInfo = () => {
         this.props.changeDetailedMovieId(this.props.movie.id);
         this.props.openDetail();
-    }
+    };
 
     addFavoriteMovie = event => {
         event.stopPropagation();
         this.props.addFavoriteMovie(this.props.movie.id);
-    }
+    };
 
-    deleteFavoriteMovie = event => {        
+    deleteFavoriteMovie = event => {
         event.stopPropagation();
         this.props.deleteFavoriteMovie(this.props.movie.id);
-    }
+    };
 
     shouldComponentUpdate(nextProps, nextState, nextContext) {
         if (nextProps.isInFavorite === !this.props.isInFavorite) return true;
@@ -32,27 +32,27 @@ export class MovieItem extends Component {
     }
 
     render() {
-        const { movie, genreList, isInFavorite } = this.props;     
+        const { movie, genreList, isInFavorite } = this.props;
         const release_date = new Date(movie.release_date).getFullYear();
-        let genres = (genreList && genreList.length) ? genreList.reduce((genres, current) => {            
-            if (movie.genre_ids.includes(current.id)) {
-                genres.push(current.name);
-                return genres;
-            }
-            return genres;
-        }, []).join(', ') : "loading";
-        
+        let genres =
+            genreList && genreList.length
+                ? genreList
+                      .reduce((genres, current) => {
+                          if (movie.genre_ids.includes(current.id)) {
+                              genres.push(current.name);
+                              return genres;
+                          }
+                          return genres;
+                      }, [])
+                      .join(", ")
+                : "loading";
+
         return (
-            <li
-                className="movie-item"
-                onClick={this.openDetailInfo}
-            >
+            <li className="movie-item" onClick={this.openDetailInfo}>
                 <img
                     src={`https://image.tmdb.org/t/p/w200/${movie.poster_path}`}
                 />
-                <div
-                    className="info"
-                >
+                <div className="info">
                     <h2 className="movie-title">
                         {movie.title} ({release_date})
                     </h2>
@@ -61,10 +61,14 @@ export class MovieItem extends Component {
                         Жанры: {genres} <br />
                     </span>
                     <button
-                        onClick={isInFavorite ? this.deleteFavoriteMovie : this.addFavoriteMovie}
+                        onClick={
+                            isInFavorite
+                                ? this.deleteFavoriteMovie
+                                : this.addFavoriteMovie
+                        }
                         className={isInFavorite ? "in-favorite" : ""}
                     >
-                    {isInFavorite ? "В избранном" : "В избранное"}                        
+                        {isInFavorite ? "В избранном" : "В избранное"}
                     </button>
                 </div>
                 <div className="background" />

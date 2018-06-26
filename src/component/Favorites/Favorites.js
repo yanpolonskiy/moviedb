@@ -15,15 +15,20 @@ export class Favorites extends Component {
         this.setState({
             favoriteMovies: [].concat(this.state.favoriteMovies, data)
         });
-    }
+    };
 
     stopPropagation = event => {
         event.stopPropagation();
-    }
+    };
 
     render() {
-        const { favorites, openDetail, changeDetailedMovieId, deleteFavoriteMovie } = this.props;
-        
+        const {
+            favorites,
+            openDetail,
+            changeDetailedMovieId,
+            deleteFavoriteMovie
+        } = this.props;
+
         return (
             <div className="favorites-container" onClick={this.stopPropagation}>
                 <h2>Избранное</h2>
@@ -34,9 +39,7 @@ export class Favorites extends Component {
                             id={id}
                             openDetail={openDetail}
                             deleteFavoriteMovie={deleteFavoriteMovie}
-                            changeDetailedMovieId={
-                                changeDetailedMovieId
-                            }
+                            changeDetailedMovieId={changeDetailedMovieId}
                         />
                     ))}
                 </ul>

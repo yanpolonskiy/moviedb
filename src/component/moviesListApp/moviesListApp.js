@@ -9,8 +9,15 @@ import { MoviesList } from "../MoviesList/MoviesList";
 import { Popup } from "../PopUp/PopUp";
 import { FilterInput } from "../FilterInput/FilterInput";
 
-import { isNeedToLoad, disableScrolling, enableScrolling } from "../../helpers/utils.js";
-import { get as storageGet, set as storageSet } from "../../helpers/localStorage";
+import {
+    isNeedToLoad,
+    disableScrolling,
+    enableScrolling
+} from "../../helpers/utils.js";
+import {
+    get as storageGet,
+    set as storageSet
+} from "../../helpers/localStorage";
 
 import * as mvApi from "../../helpers/moviedbapi";
 
@@ -26,13 +33,12 @@ class MoviesListApp extends Component {
             isLoadingData: false,
             detailedMovieId: null
         };
-
     }
-    componentDidMount() {        
+    componentDidMount() {
         window.addEventListener("scroll", this.scrollHandler);
         const { loadMovies, loadFavorites } = this.props;
-       this.requestMovies(1, this.state.page);
-       mvApi.get(5).then(
+        this.requestMovies(1, this.state.page);
+        mvApi.get(5).then(
             data => {
                 this.setState({
                     genreList: data.genres
@@ -42,11 +48,17 @@ class MoviesListApp extends Component {
         );
     }
 
+    componentWillUnmount() {
+        window.removeEventListener("scroll", this.scrollHandler);
+    }
+
+    //Событие скрола - подгрузка фильмов, кнопка вверх    
     scrollHandler = () => {
         this.loadMovies();
         this.trackScroll();
-    }
+    };
 
+    //проверка нужно ли показать кнопку Вверх
     trackScroll = () => {
         let goTopBtn = document.querySelector(".back-to-top");
         let scrolled = window.pageYOffset;
@@ -57,14 +69,16 @@ class MoviesListApp extends Component {
         if (scrolled < coords) {
             goTopBtn.classList.remove("show");
         }
-    }
+    };
 
+    //возвращаемся вверх страницы
     backToTop = () => {
         if (window.pageYOffset > 0) {
             window.scroll(0, 10);
         }
-    }
+    };
 
+    //загрузка фильмов
     loadMovies = () => {
         if (
             !isNeedToLoad() ||
@@ -80,30 +94,31 @@ class MoviesListApp extends Component {
                 this.requestMovies(3, this.state.page + 1);
             }
         }
-    }
+    };
 
+    //изменение Id фильма для детального отображения в попапе
     changeDetailedMovieId = id => {
         this.setState({
             detailedMovieId: id
         });
-    }
+    };
 
     closePopUp = () => {
         this.setState({
             isPopUpVisible: false
         });
-       enableScrolling();
-    }
-
+        enableScrolling();
+    };
 
     openPopUp = id => {
         this.setState({
             isPopUpVisible: true,
             popUpId: id
         });
-       disableScrolling();
-    }
+        disableScrolling();
+    };
 
+    //отправка запроса на фильмы
     requestMovies = (type, page) => {
         const { loadMovies } = this.props;
         this.setState({
@@ -126,8 +141,9 @@ class MoviesListApp extends Component {
                 console.log(message);
             }
         );
-    }
+    };
 
+    //поиск по интеру в поле поиска
     search = event => {
         const { cleanMovies } = this.props;
         if (event.which !== 13) return false;
@@ -142,15 +158,26 @@ class MoviesListApp extends Component {
                 page: 1
             });
         }
-    }
+    };
 
     render() {
-        const { isPopUpVisible, genreList, popUpId, detailedMovieId } = this.state;
-        const {changeSearchWord, favorites, movies, addFavoriteMovie, deleteFavoriteMovie} = this.props;
+        const {
+            isPopUpVisible,
+            genreList,
+            popUpId,
+            detailedMovieId
+        } = this.state;
+        const {
+            changeSearchWord,
+            favorites,
+            movies,
+            addFavoriteMovie,
+            deleteFavoriteMovie
+        } = this.props;
 
         return (
             <div id="movies-list-app">
-            <Popup
+                <Popup
                     id={popUpId}
                     dMovieId={detailedMovieId}
                     isVisible={isPopUpVisible}
@@ -160,15 +187,11 @@ class MoviesListApp extends Component {
                     deleteFavoriteMovie={deleteFavoriteMovie}
                     changeDetailedMovieId={this.changeDetailedMovieId}
                     addFavoriteMovie={addFavoriteMovie}
-                >
-                    
-                </Popup>
+                />
                 <div className="menu">
                     <FilterInput
                         placeholder="Введите название фильма"
-                        onInput={e =>
-                            changeSearchWord(e.target.value)
-                        }
+                        onInput={e => changeSearchWord(e.target.value)}
                         startSearch={this.search}
                     />
                     <button onClick={() => this.openPopUp(0)}>
@@ -184,7 +207,7 @@ class MoviesListApp extends Component {
                     openDetail={() => this.openPopUp(1)}
                     changeDetailedMovieId={this.changeDetailedMovieId}
                 />
-                
+
                 <a
                     className="back-to-top"
                     title="Наверх"

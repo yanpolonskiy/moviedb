@@ -6,7 +6,11 @@ import { SimilarMovieItem } from "../SimilarMovieItem/SimilarMovieItem";
 export const SimilarMovies = props => {
     return (
         <div className="similar-movies-container">
-            <h2>{props.movies.length > 1 ? 'Похожие фильмы' : 'Похожих фильмов нет'} </h2>
+            <h2>
+                {props.movies.length > 1
+                    ? "Похожие фильмы"
+                    : "Похожих фильмов нет"}{" "}
+            </h2>
             <ul className="similar-movies-list">
                 {props.movies.map((movie, i) => (
                     <SimilarMovieItem
