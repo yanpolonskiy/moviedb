@@ -7,6 +7,7 @@ import { store, persistor } from './store/store';
 import MoviesListApp from './component/moviesListApp/moviesListApp';
 
 
+
 ReactDOM.render(
     <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>

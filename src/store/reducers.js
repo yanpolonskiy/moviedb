@@ -23,13 +23,13 @@ export const rootReducer = (state = initialState, action) => {
         case constants.ADD_FAVORITE_MOVIE:
             return {
                 ...state,
-                favorites: action.payload
+                favorites: [].concat(state.favorites, action.payload)
             };
 
-        case constants.DELETE_FAVORITE_MOVIE:
+        case constants.DELETE_FAVORITE_MOVIE:        
            return {
                 ...state,
-                favorites: action.payload
+                favorites: state.favorites.filter((id) => id !== action.payload)
             };
         case constants.CHANGE_SEARCH_WORD:
             return {

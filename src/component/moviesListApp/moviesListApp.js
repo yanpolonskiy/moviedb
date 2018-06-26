@@ -26,12 +26,12 @@ class MoviesListApp extends Component {
             isLoadingData: false,
             detailedMovieId: null
         };
+
     }
-    componentDidMount() {
-        
+    componentDidMount() {        
         window.addEventListener("scroll", this.scrollHandler);
         const { loadMovies, loadFavorites } = this.props;
-       if (this.props.movies.length === 0) this.requestMovies(1, this.state.page);
+       this.requestMovies(1, this.state.page);
        mvApi.get(5).then(
             data => {
                 this.setState({
@@ -40,7 +40,6 @@ class MoviesListApp extends Component {
             },
             message => console.log(message)
         );
-     //loadFavorites(storageGet("favorites"));
     }
 
     scrollHandler = () => {
@@ -69,7 +68,7 @@ class MoviesListApp extends Component {
     loadMovies = () => {
         if (
             !isNeedToLoad() ||
-            this.state.total_pages === this.state.page + 1 ||
+            this.state.total_pages <= this.state.page ||
             this.state.isLoadingData
         )
             return false;
@@ -93,8 +92,7 @@ class MoviesListApp extends Component {
         this.setState({
             isPopUpVisible: false
         });
-        enableScrolling();
-       // document.querySelector("body").style.overflowY = "scroll";
+       enableScrolling();
     }
 
 
@@ -103,8 +101,7 @@ class MoviesListApp extends Component {
             isPopUpVisible: true,
             popUpId: id
         });
-        disableScrolling();
-       // document.querySelector("body").style.overflowY = "hidden";
+       disableScrolling();
     }
 
     requestMovies = (type, page) => {
@@ -117,7 +114,8 @@ class MoviesListApp extends Component {
                 if (data.results && data.results.length) {
                     loadMovies(data.results);
                     this.setState({
-                        page: this.state.page + 1
+                        page: this.state.page + 1,
+                        total_pages: data.total_pages
                     });
                 }
                 this.setState({
@@ -128,18 +126,6 @@ class MoviesListApp extends Component {
                 console.log(message);
             }
         );
-    }
-
-    addFavoriteMovie = id => {
-        let addedFavorites = [].concat(storageGet('favorites'), id);
-        storageSet('favorites', addedFavorites);
-        this.props.addFavoriteMovie(addedFavorites);
-    }
-
-    deleteFavoriteMovie = id => {
-        let filteredFavorites = this.props.favorites.filter(item => item !== id);
-        storageSet('favorites', filteredFavorites);
-        this.props.deleteFavoriteMovie(filteredFavorites);
     }
 
     search = event => {
@@ -171,9 +157,9 @@ class MoviesListApp extends Component {
                     closePopUp={this.closePopUp}
                     favorites={favorites}
                     openDetail={() => this.openPopUp(1)}
-                    deleteFavoriteMovie={this.deleteFavoriteMovie}
+                    deleteFavoriteMovie={deleteFavoriteMovie}
                     changeDetailedMovieId={this.changeDetailedMovieId}
-                    addFavoriteMovie={this.addFavoriteMovie}
+                    addFavoriteMovie={addFavoriteMovie}
                 >
                     
                 </Popup>
@@ -183,7 +169,7 @@ class MoviesListApp extends Component {
                         onInput={e =>
                             changeSearchWord(e.target.value)
                         }
-                        startSearch={this.search.bind}
+                        startSearch={this.search}
                     />
                     <button onClick={() => this.openPopUp(0)}>
                         Избранное: {favorites.length}
@@ -193,8 +179,8 @@ class MoviesListApp extends Component {
                     favorites={favorites}
                     genreList={genreList}
                     movies={movies}
-                    addFavoriteMovie={this.addFavoriteMovie}
-                    deleteFavoriteMovie={this.deleteFavoriteMovie}
+                    addFavoriteMovie={addFavoriteMovie}
+                    deleteFavoriteMovie={deleteFavoriteMovie}
                     openDetail={() => this.openPopUp(1)}
                     changeDetailedMovieId={this.changeDetailedMovieId}
                 />

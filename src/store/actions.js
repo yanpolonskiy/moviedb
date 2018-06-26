@@ -2,7 +2,6 @@ import * as constants from '../constants/storeConstans';
 import { sortObjectByName } from '../helpers/utils';
 
 export const loadMovies = movies => {
-    console.log(movies);
     return {
         type: constants.LOAD_MOVIES,
         payload: movies

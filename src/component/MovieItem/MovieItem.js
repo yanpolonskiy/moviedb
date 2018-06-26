@@ -32,7 +32,6 @@ export class MovieItem extends Component {
     }
 
     render() {
-        console.log('s');
         const { movie, genreList, isInFavorite } = this.props;     
         const release_date = new Date(movie.release_date).getFullYear();
         let genres = (genreList && genreList.length) ? genreList.reduce((genres, current) => {            

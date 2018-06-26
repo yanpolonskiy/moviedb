@@ -23,7 +23,7 @@ export class DetailedMovie extends Component {
             <div className="detailed-movie">
             </div>
         );
-    } else if (!isLoading) {
+    }
         const release_date = new Date(movie.release_date).getFullYear();
         const genres = movie.genres.map(genre => genre.name).join(", ");
         const budget = formatNum(movie.budget);
@@ -48,5 +48,5 @@ export class DetailedMovie extends Component {
             </div>
         );
     }
-}
+
 };
