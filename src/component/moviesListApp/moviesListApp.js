@@ -52,7 +52,7 @@ class MoviesListApp extends Component {
         window.removeEventListener("scroll", this.scrollHandler);
     }
 
-    //Событие скрола - подгрузка фильмов, кнопка вверх    
+    //Событие скрола - подгрузка фильмов, кнопка вверх
     scrollHandler = () => {
         this.loadMovies();
         this.trackScroll();

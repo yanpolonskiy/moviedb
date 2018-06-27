@@ -19,10 +19,10 @@ export function isNeedToLoad() {
  * @param {*} str 
  */
 export function formatNum(numToFormat) {
-    numInString = '' + numToFormat;
+    let numInString = '' + numToFormat;
     numInString = numInString.replace(/(\.(.*))/g, '');
     let charArray = numInString.split('');
-    let str_temp = '';
+    let numInString_temp = '';
     if (numInString.length > 3) {
         for (let i = charArray.length - 1, j = 1; i >= 0; i--, j++) {
             numInString_temp = charArray[i] + numInString_temp;
@@ -30,7 +30,7 @@ export function formatNum(numToFormat) {
                 numInString_temp = ' ' + numInString_temp;
             }
         }
-        return str_temp;
+        return numInString_temp;
     } else {
         return numInString;
     }

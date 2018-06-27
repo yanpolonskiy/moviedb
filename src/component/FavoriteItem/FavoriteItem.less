@@ -7,9 +7,15 @@
     transform: scale(0.95, 0.95);
     position: relative;
     padding: 0.2em;
-    z-index: 5;
     height: 385px;
     cursor: pointer;
+
+    &:hover {
+        cursor: pointer;
+        transform: scale(0.98, 0.98);
+        border: 1px solid rgb(242, 255, 54);
+        box-shadow: 1px 1px 10px -2px rgba(242, 255, 54, 1);
+    }
 
     .delete-button {
         position: absolute;
@@ -18,7 +24,6 @@
         width: 32px;
         height: 32px;
         opacity: 1;
-        z-index: 100;
         &:hover {
             opacity: 1;
             &:before,
@@ -49,8 +54,6 @@
         display: block;
         width: 100%;
         border: 2px solid black;
-        position: relative;
-        z-index: 20;
         height: 100%;
     }
     .background {
@@ -67,12 +70,4 @@
         background: lightcyan;
         background-image: url("../../images/moviesBackground.jpg");
     }
-}
-
-.movie-item:hover {
-    cursor: pointer;
-    transform: scale(0.98, 0.98);
-    border: 1px solid rgb(242, 255, 54);
-    box-shadow: 1px 1px 10px -2px rgba(242, 255, 54, 1);
-    z-index: 40;
 }
