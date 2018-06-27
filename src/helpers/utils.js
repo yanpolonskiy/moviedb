@@ -18,21 +18,21 @@ export function isNeedToLoad() {
  * форматирует вывод числа в строку по 3 знака
  * @param {*} str 
  */
-export function formatNum(str) {
-    str = '' + str;
-    str = str.replace(/(\.(.*))/g, '');
-    let arr = str.split('');
+export function formatNum(numToFormat) {
+    numInString = '' + numToFormat;
+    numInString = numInString.replace(/(\.(.*))/g, '');
+    let charArray = numInString.split('');
     let str_temp = '';
-    if (str.length > 3) {
-        for (let i = arr.length - 1, j = 1; i >= 0; i--, j++) {
-            str_temp = arr[i] + str_temp;
+    if (numInString.length > 3) {
+        for (let i = charArray.length - 1, j = 1; i >= 0; i--, j++) {
+            numInString_temp = charArray[i] + numInString_temp;
             if (j % 3 == 0) {
-                str_temp = ' ' + str_temp;
+                numInString_temp = ' ' + numInString_temp;
             }
         }
         return str_temp;
     } else {
-        return str;
+        return numInString;
     }
 }
 
